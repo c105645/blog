@@ -1,0 +1,45 @@
+server:
+  port: 9000
+  tomcat:
+    connection-timeout: 2s
+    keep-alive-timeout: 15s
+    threads:
+      max: 50
+      min-spare: 5
+
+spring:
+  application:
+    name: edge-service
+  lifecycle:
+    timeout-per-shutdown-phase: 15s 
+  config:
+    import: "optional:configserver:"   
+  cloud:
+    config:
+      uri: ${SPRING_CLOUD_CONFIG_URI:http://localhost:8888}
+      request-connect-timeout: 8000 # 5s
+      request-read-timeout: 20000 # 5s
+      fail-fast: false # In production, set to true
+      retry:
+        max-attempts: 6
+        initial-interval: 2000 # 1s
+        max-interval: 3000 # 2s
+        multiplier: 1.1   
+    gateway:
+      routes:
+        - id: userprofile-route
+          uri: ${USERPROFILE_SERVICE_URL:http://localhost:9010}/api/v1/userprofile
+          predicates:
+            - Path=/api/v1/userprofile/**
+           
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh
+        
+  
+        
+rsa:
+  public-key: classpath:certs/public.pem
+

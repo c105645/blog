@@ -1,0 +1,49 @@
+server:
+  port: 9010
+  tomcat:
+    connection-timeout: 2s
+    keep-alive-timeout: 15s
+    threads:
+      max: 50
+      min-spare: 5
+
+spring:
+  main:
+    allow-circular-references: true
+  application:
+    name: userprofile-service
+  lifecycle:
+    timeout-per-shutdown-phase: 15s   
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show_sql: true
+  datasource:
+    username: user
+    password: password
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/blogdb}
+    hikari:
+      connection-timeout: 2000 #ms
+      maximum-pool-size: 5
+  jackson:
+    serialization:
+      fail-on-empty-beans: 'false'
+  config:
+    import: "optional:configserver:"
+  cloud:
+    config:
+      uri:  ${SPRING_CLOUD_CONFIG_URI:http://localhost:8888}
+      request-connect-timeout: 8000 # 5s
+      request-read-timeout: 8000 # 5s
+      fail-fast: false # In production, set to true
+      retry:
+        max-attempts: 6
+        initial-interval: 2000 # 1s
+        max-interval: 3000 # 2s
+        multiplier: 1.1      
+rsa:
+  private-key: classpath:certs/private.pem
+  public-key: classpath:certs/public.pem
