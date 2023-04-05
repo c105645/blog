@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.ness.userprofileservice.aspects.ToLog;
 import com.ness.userprofileservice.dtos.FollowRequest;

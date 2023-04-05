@@ -19,7 +19,7 @@ import org.springframework.validation.FieldError;
 public class AuthControllerAdvice {       
            @ExceptionHandler(UserNotFoundException.class)
             @ResponseStatus(HttpStatus.NOT_FOUND)
-            public ResponseEntity<Object> newsNotFoundHandler(UserNotFoundException ex, WebRequest req) {
+            public ResponseEntity<Object> userNotFoundHandler(UserNotFoundException ex, WebRequest req) {
              Map<String, Object> body = new LinkedHashMap<>();
                 body.put("timestamp", LocalDateTime.now());
                 body.put("message", ex.getMessage());
@@ -29,7 +29,7 @@ public class AuthControllerAdvice {
 
             @ExceptionHandler(UserAlreadyExistsException.class)
             @ResponseStatus(HttpStatus.CONFLICT)
-            public ResponseEntity<Object>  newsAlreadyExistsHandler(UserAlreadyExistsException ex, WebRequest req) {
+            public ResponseEntity<Object>  userAlreadyExistsHandler(UserAlreadyExistsException ex, WebRequest req) {
                  Map<String, Object> body = new LinkedHashMap<>();
                     body.put("timestamp", LocalDateTime.now());
                     body.put("message", ex.getMessage());

@@ -1,9 +1,12 @@
 package com.ness.postservice.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -12,14 +15,15 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "post_comment")
+@EntityListeners(AuditingEntityListener.class)
 public class Comment extends Base {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;   
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "post_id")
 	@NotNull
-	@JsonIgnore
+    @JsonBackReference
 	private Post post;
 
 	private String review;

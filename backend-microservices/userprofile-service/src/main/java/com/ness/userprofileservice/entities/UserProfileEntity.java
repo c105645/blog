@@ -3,10 +3,14 @@ package com.ness.userprofileservice.entities;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.JoinColumn;
@@ -18,6 +22,7 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name="userprofile")
+@EntityListeners(AuditingEntityListener.class)
 public class UserProfileEntity extends Base{
 	
 
@@ -158,9 +163,10 @@ public class UserProfileEntity extends Base{
 	@Override
 	public String toString() {
 		return "UserProfileEntity [username=" + username + ", firstName=" + firstName + ", lastName=" + lastName
+				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
 				+ ", password=" + password + ", email=" + email + ", isAdmin=" + isAdmin + ", biography=" + biography
-				+ ", imageUrl=" + imageUrl + ", categories=" + categories + ", followers=" + followers + ", following="
-				+ following + "]";
+				+ ", imageUrl=" + imageUrl + ", categories=" + categories + ", followers=" + followers.stream().map(follower->follower.getId() + ", " + follower.getUsername()).collect(Collectors.toList()) + ", following="
+				+ following.stream().map(follower->follower.getId() + ", " + follower.getUsername()).collect(Collectors.toList()) + "]";
 	}
 	
 	

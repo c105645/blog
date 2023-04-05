@@ -1,8 +1,10 @@
 package com.ness.postservice.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -12,6 +14,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "post_votes")
+@EntityListeners(AuditingEntityListener.class)
 public class PostVotes extends Base {
 
 	private static final long serialVersionUID = 1L;
@@ -21,7 +24,7 @@ public class PostVotes extends Base {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "post_id", referencedColumnName = "id", insertable = false, updatable = false)
 	@NotNull
-	@JsonIgnore
+    @JsonBackReference
 	private Post post;
 
 	public int getScore() {

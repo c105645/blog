@@ -40,7 +40,6 @@ public class UserProfileServiceImpl implements UserProfileService{
 	             
 	       if(userent.isEmpty()) {
 				UserProfileEntity userProfileEntity = usermapper.toEntity(user);
-				System.out.println(userProfileEntity);
 				userProfileEntity.setPassword(passwordEncoder.encode(user.password()));
 				UserProfileEntity savedEntity =  repository.save(userProfileEntity);
 				return usermapper.toDto(savedEntity);
@@ -70,7 +69,8 @@ public class UserProfileServiceImpl implements UserProfileService{
 		repository.deleteById(userId);	
     }
     
-
+	
+	
 	@Override
     @Transactional()
     public UserProfileDto getUserById(Long userId) throws UserNotFoundException {
@@ -97,11 +97,11 @@ public class UserProfileServiceImpl implements UserProfileService{
     @Transactional()
 	public UserProfileDto fetchByUsername(String username) throws UserNotFoundException {
 		UserProfileEntity user = repository.findUserProfileByUsername(username).orElseThrow(() -> new UserNotFoundException("user not found"));
+		System.out.println(user);
 		return usermapper.toDto(user);
    	}
 	
 	
-	@ToLog
 	@Override
     @Transactional()
     public void addFollower(Long userId, Long toFollowId) throws UserNotFoundException {

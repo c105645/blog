@@ -1,7 +1,12 @@
 package com.ness.postservice.entities;
 
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
@@ -11,6 +16,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "post_details")
+@EntityListeners(AuditingEntityListener.class)
 public class PostDetails extends Base {
 
 	private static final long serialVersionUID = 1L;
@@ -18,6 +24,7 @@ public class PostDetails extends Base {
 	@OneToOne(fetch = FetchType.LAZY)
 	@MapsId
 	@JoinColumn(name = "id")
+    @JsonBackReference
 	private Post post;
 
 	@Lob

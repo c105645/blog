@@ -17,8 +17,6 @@ public interface UserProfileMapper {
      
 	@Mapping( target = "followers", qualifiedByName = "followerToDto")
 	@Mapping( target = "following", qualifiedByName = "followerToDto")
-	@Mapping(target = "createdAt", ignore = true)
-	@Mapping(target = "updatedAt", ignore = true)
  	UserProfileDto toDto(UserProfileEntity user);
 
 	

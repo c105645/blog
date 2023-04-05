@@ -5,11 +5,14 @@ import java.util.List;
 
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.JoinColumn;
@@ -20,6 +23,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "post")
+@EntityListeners(AuditingEntityListener.class)
 public class Post extends Base {
 
 	private static final long serialVersionUID = 1L;
@@ -30,16 +34,17 @@ public class Post extends Base {
 
 	@OneToMany(mappedBy = "post", fetch = FetchType.LAZY, orphanRemoval = true, cascade = { CascadeType.PERSIST,
 			CascadeType.MERGE })
-	@JsonIgnore
+	@JsonManagedReference
 	private List<Comment> comments = new ArrayList<>();
 	
 	@OneToOne(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@LazyToOne(LazyToOneOption.NO_PROXY)
-	@JsonIgnore
+	@JsonManagedReference
 	private PostDetails postDetails;
 
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "post_tag", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
+	@JsonManagedReference
 	private List<Tag> tags = new ArrayList<>();
 
 	private String category;

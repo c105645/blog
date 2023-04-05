@@ -1,10 +1,14 @@
 package com.ness.userprofileservice.entities;
 
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name="categories")
+@EntityListeners(AuditingEntityListener.class)
 public class Category extends Base {
 
 	
