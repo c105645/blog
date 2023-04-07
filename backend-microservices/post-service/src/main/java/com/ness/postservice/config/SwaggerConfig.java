@@ -14,7 +14,8 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
  * @EnableSwagger2
  * 
  */
-
+//*http://localhost:9020/swagger-ui/index.html 
+//*http://localhost:9020/v3/api-docs
 @Configuration
 @SecurityScheme(name = "api-security-scheme", scheme = "Bearer", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 @OpenAPIDefinition(info = @Info(title = "BLOG API POST Service", version = "2.0", description = "Online Blog Application"))
