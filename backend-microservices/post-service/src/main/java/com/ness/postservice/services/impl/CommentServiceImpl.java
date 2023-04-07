@@ -1,14 +1,15 @@
 package com.ness.postservice.services.impl;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.TypedSort;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
 import com.ness.postservice.dtos.CommentDto;
 import com.ness.postservice.entities.Comment;
@@ -20,6 +21,7 @@ import com.ness.postservice.repositories.CommentRepository;
 import com.ness.postservice.repositories.PostRepository;
 import com.ness.postservice.services.CommentService;
 
+@Service
 public class CommentServiceImpl implements CommentService{
 
 	private final CommentRepository repo;
@@ -72,8 +74,14 @@ public class CommentServiceImpl implements CommentService{
 				.orElseThrow(() -> new PostNotFoundException("Post with id " + postId + " doesnot exists"));
 		String user = SecurityContextHolder.getContext().getAuthentication().getName();
 		
-		Optional<Comment> comment = repo.findOneByCreatedByAndPost(user, post);
-		return comment.isPresent();
+		Comment commentProbe = new Comment();
+		commentProbe.setPost(post);
+		commentProbe.setCreatedBy(user);
+		
+		Example<Comment> commentExample = Example.of(commentProbe);
+
+		List<Comment> comments = repo.findAll(commentExample);
+		return comments.size() > 0;
 	}
 
 	@Override

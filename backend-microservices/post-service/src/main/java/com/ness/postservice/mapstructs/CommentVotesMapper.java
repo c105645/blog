@@ -12,9 +12,6 @@ public interface CommentVotesMapper {
 	@Mapping(target = "comment", ignore = true)
 	CommentVotesDto toDto(CommentVotes vote);
 	
-	@Mapping(target = "createdAt", ignore = true)
-	@Mapping(target = "updatedAt", ignore = true)
-	@Mapping(target = "createdBy", ignore = true)
 	CommentVotes toEntity(CommentVotesDto vote);
 
 }

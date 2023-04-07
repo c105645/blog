@@ -32,12 +32,11 @@ public class Post extends Base {
 
 	private String short_description;
 
-	@OneToMany(mappedBy = "post", fetch = FetchType.LAZY, orphanRemoval = true, cascade = { CascadeType.PERSIST,
-			CascadeType.MERGE })
+	@OneToMany(mappedBy = "post", fetch = FetchType.LAZY, orphanRemoval = true, cascade = {CascadeType.MERGE })
 	@JsonManagedReference
 	private List<Comment> comments = new ArrayList<>();
 	
-	@OneToOne(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	@LazyToOne(LazyToOneOption.NO_PROXY)
 	@JsonManagedReference
 	private PostDetails postDetails;
@@ -219,6 +218,11 @@ public class Post extends Base {
 				+ ", postDetails=" + postDetails + ", tags=" + tags + ", category=" + category + ", createdBy=" + createdBy
 				+ ", commentCount=" + commentCount + ", upVoteCount=" + upVoteCount + ", downVoteCount=" + downVoteCount
 				+ ", id=" + id + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
+	}
+
+	public void setCreatedBy(String user) {
+		this.createdBy = user;
+		
 	}
 
 

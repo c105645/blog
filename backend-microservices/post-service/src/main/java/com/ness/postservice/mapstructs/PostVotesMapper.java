@@ -11,8 +11,5 @@ public interface PostVotesMapper {
 
 	PostVotesDto toDto(PostVotes vote);
 	
-	@Mapping(target = "createdAt", ignore = true)
-	@Mapping(target = "updatedAt", ignore = true)
-	@Mapping(target = "createdBy", ignore = true)
 	PostVotes toEntity(PostVotesDto vote);
 }

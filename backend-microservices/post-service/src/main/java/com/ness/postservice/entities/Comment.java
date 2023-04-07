@@ -22,7 +22,6 @@ public class Comment extends Base {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "post_id")
-	@NotNull
     @JsonBackReference
 	private Post post;
 
@@ -106,6 +105,11 @@ public class Comment extends Base {
 	public String toString() {
 		return "Comment [post=" + post + ", review=" + review + ", upVoteCount=" + upVoteCount + ", downVoteCount="
 				+ downVoteCount + ", id=" + id +  ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
+	}
+
+	public void setCreatedBy(String user) {
+		this.createdBy = user;
+		
 	}
 
 

@@ -28,11 +28,11 @@ public class Base implements Serializable {
 	public Long id;
 	
 	@CreatedBy
-	@Column(name = "created_by", nullable = false)
+	@Column(name = "created_by")
 	public String createdBy;
 
 	@CreatedDate
-	@Column(name = "created_at", nullable = false)
+	@Column(name = "created_at")
 	public LocalDate createdAt;
 	
 	@LastModifiedDate

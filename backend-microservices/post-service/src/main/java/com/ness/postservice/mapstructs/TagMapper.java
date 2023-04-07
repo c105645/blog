@@ -12,9 +12,6 @@ public interface TagMapper {
 	
 	TagDto toDto(Tag tag);
 	
-	@Mapping(target = "createdAt", ignore = true)
-	@Mapping(target = "updatedAt", ignore = true)
-	@Mapping(target = "createdBy", ignore = true)
 	Tag toEntity(TagDto tag);
 
 }

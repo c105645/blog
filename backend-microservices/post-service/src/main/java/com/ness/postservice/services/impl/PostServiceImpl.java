@@ -3,27 +3,33 @@ package com.ness.postservice.services.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.TypedSort;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
 import com.ness.postservice.dtos.PostDto;
 import com.ness.postservice.entities.Post;
 import com.ness.postservice.exceptions.PostNotFoundException;
 import com.ness.postservice.mapstructs.PostMapper;
+import com.ness.postservice.mapstructs.PostsListMapper;
 import com.ness.postservice.repositories.PostRepository;
 import com.ness.postservice.services.PostService;
 
+@Service
 public class PostServiceImpl implements PostService {
 
 	private final PostRepository repo;
 	private final PostMapper postmapper;
+	private final PostsListMapper postlistmapper;
 
-	public PostServiceImpl(PostRepository repo, PostMapper postmapper) {
+	public PostServiceImpl(PostRepository repo, PostMapper postmapper, PostsListMapper postlistmapper) {
 		this.repo = repo;
 		this.postmapper = postmapper;
+		this.postlistmapper = postlistmapper;
 	}
 
 	@Override
@@ -36,7 +42,7 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public List<PostDto> getPostListByPage(Pageable pageable) {
 		List<Post> posts = repo.findAll(pageable).getContent();
-		return posts.stream().map(post -> postmapper.toDto(post)).collect(Collectors.toList());
+		return posts.stream().map(post -> postlistmapper.toDto(post)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -45,7 +51,7 @@ public class PostServiceImpl implements PostService {
 		Sort sortByUpVoteCount = postTypedSort.by(Post::getUpVoteCount).descending();
 		Pageable firstSortedPage = PageRequest.of(pageable.getPageNumber(),pageable.getPageSize(), sortByUpVoteCount);
 		List<Post> posts = repo.findAll(firstSortedPage).getContent();
-		return posts.stream().map(post -> postmapper.toDto(post)).collect(Collectors.toList());
+		return posts.stream().map(post -> postlistmapper.toDto(post)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -54,23 +60,17 @@ public class PostServiceImpl implements PostService {
 		Sort sortByCommentsCount = postTypedSort.by(Post::getCommentCount).descending();
 		Pageable firstSortedPage = PageRequest.of(pageable.getPageNumber(),pageable.getPageSize(), sortByCommentsCount);
 		List<Post> posts = repo.findAll(firstSortedPage).getContent();
-		return posts.stream().map(post -> postmapper.toDto(post)).collect(Collectors.toList());
+		return posts.stream().map(post -> postlistmapper.toDto(post)).collect(Collectors.toList());
 	}
 
-	@Override
-	public List<PostDto> getPostListByCurrentUser() {
-		String user = SecurityContextHolder.getContext().getAuthentication().getName();
-		List<Post> posts = repo.findAllByCreatedBy(user);
-		return posts.stream().map(post -> postmapper.toDto(post)).collect(Collectors.toList());
-	}
 
 	@Override
 	public List<PostDto> getMostVotedPostsByCategory(String category, Pageable pageable) {
 		TypedSort<Post> postTypedSort = Sort.sort(Post.class);
 		Sort sortByUpVoteCount = postTypedSort.by(Post::getUpVoteCount).descending();
 		Pageable firstSortedPage = PageRequest.of(pageable.getPageNumber(),pageable.getPageSize(), sortByUpVoteCount);
-		List<Post> posts = repo.findByCategory(category, firstSortedPage).getContent();
-		return posts.stream().map(post -> postmapper.toDto(post)).collect(Collectors.toList());
+		List<Post> posts = repo.findAllByCategory(category, firstSortedPage).getContent();
+		return posts.stream().map(post -> postlistmapper.toDto(post)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -78,8 +78,8 @@ public class PostServiceImpl implements PostService {
 		TypedSort<Post> postTypedSort = Sort.sort(Post.class);
 		Sort sortByCommentsCount = postTypedSort.by(Post::getCommentCount).descending();
 		Pageable firstSortedPage = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortByCommentsCount);
-		List<Post> posts = repo.findByCategory(category, firstSortedPage).getContent();
-		return posts.stream().map(post -> postmapper.toDto(post)).collect(Collectors.toList());
+		List<Post> posts = repo.findAllByCategory(category, firstSortedPage).getContent();
+		return posts.stream().map(post -> postlistmapper.toDto(post)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -104,8 +104,14 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public List<PostDto> getPostsCreatedByCurrentUser(Pageable pageable) {
 		String user = SecurityContextHolder.getContext().getAuthentication().getName();
-		List<Post> posts = repo.findByCreatedBy(user, pageable).getContent();
-		return posts.stream().map(post -> postmapper.toDto(post)).collect(Collectors.toList());
+		Post  postProbe = new Post();
+		postProbe.setCreatedBy(user);
+		
+		Example<Post> postExample = Example.of(postProbe);
+
+		List<Post> posts = repo.findAll(postExample, pageable).getContent();
+		
+		return posts.stream().map(post -> postlistmapper.toDto(post)).collect(Collectors.toList());
 	}
 
 }
