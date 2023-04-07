@@ -24,7 +24,7 @@ import com.ness.postservice.services.VotesService;
 
 @Service
 public class VotesServiceImpl implements VotesService {
-	
+
 	private final CommentRepository commentrepo;
 	private final PostRepository postrepo;
 	private final PostVotesRepository postvotesrepo;
@@ -32,40 +32,44 @@ public class VotesServiceImpl implements VotesService {
 
 	private final PostVotesMapper postvotesmapper;
 	private final CommentVotesMapper commentvotesmapper;
-	
+
 	public VotesServiceImpl(PostRepository postrepo, CommentRepository commentrepo, PostVotesRepository postvotesrepo,
 			CommentVotesRepository commentvotesrepo, PostVotesMapper postvotesmapper,
 			CommentVotesMapper commentvotesmapper) {
-		
-		this.postvotesmapper=postvotesmapper;
-		this.commentvotesmapper=commentvotesmapper;
-		
-		this.postrepo=postrepo;
-		this.commentrepo=commentrepo;
-		this.postvotesrepo=postvotesrepo;
-		this.commentvotesrepo=commentvotesrepo;
+
+		this.postvotesmapper = postvotesmapper;
+		this.commentvotesmapper = commentvotesmapper;
+
+		this.postrepo = postrepo;
+		this.commentrepo = commentrepo;
+		this.postvotesrepo = postvotesrepo;
+		this.commentvotesrepo = commentvotesrepo;
 	}
 
-
 	@Override
-	public PostVotesDto upVotePostById(Long postId) throws UserAlreadyVotedException, PostNotFoundException {	
+	public PostVotesDto upVotePostById(Long postId) throws UserAlreadyVotedException, PostNotFoundException {
 		Post post = postrepo.findById(postId)
 				.orElseThrow(() -> new PostNotFoundException("Post with id " + postId + " doesnot exists"));
 		String user = SecurityContextHolder.getContext().getAuthentication().getName();
-		
+
 		Optional<PostVotes> voteopt = postvotesrepo.findIfUserHasAlreadyVoted(post, user);
-		
-		if(voteopt.isEmpty()) {
+
+		if (voteopt.isEmpty()) {
 			PostVotes postvote = new PostVotes();
 			postvote.setPost(post);
 			postvote.setScore(1);
+			post.increaseUpVoteCount();
+			postrepo.save(post);
 			return postvotesmapper.toDto(postvotesrepo.save(postvote));
-		}else {
+		} else {
 			var vote = voteopt.get();
-			if(vote.getScore() == -1) {
+			if (vote.getScore() == -1) {
 				vote.setScore(1);
+				post.increaseUpVoteCount();
+				post.decreaseDownVoteCount();
+				postrepo.save(post);
 				return postvotesmapper.toDto(postvotesrepo.save(vote));
-			}else {
+			} else {
 				throw new UserAlreadyVotedException("Post with Id " + postId + " has already been up voted");
 			}
 		}
@@ -76,83 +80,99 @@ public class VotesServiceImpl implements VotesService {
 		Post post = postrepo.findById(postId)
 				.orElseThrow(() -> new PostNotFoundException("Post with id " + postId + " doesnot exists"));
 		String user = SecurityContextHolder.getContext().getAuthentication().getName();
-			
+
 		Optional<PostVotes> voteopt = postvotesrepo.findIfUserHasAlreadyVoted(post, user);
-		
-		if(voteopt.isEmpty()) {
+
+		if (voteopt.isEmpty()) {
 			PostVotes postvote = new PostVotes();
 			postvote.setPost(post);
 			postvote.setScore(1);
+			post.increaseDownVoteCount();
+			postrepo.save(post);
 			return postvotesmapper.toDto(postvotesrepo.save(postvote));
-		}else {
+		} else {
 			var vote = voteopt.get();
-			if(vote.getScore() == 1) {
+			if (vote.getScore() == 1) {
 				vote.setScore(-1);
+				post.increaseDownVoteCount();
+				post.decreaseUpVoteCount();
+				postrepo.save(post);
 				return postvotesmapper.toDto(postvotesrepo.save(vote));
-			}else {
+			} else {
 				throw new UserAlreadyVotedException("Post with Id " + postId + " has already been down voted");
 			}
 		}
-		}
-		
+	}
 
 	@Override
-	public CommentVotesDto upVoteCommentById(Long commentId)throws CommentNotFoundException, UserAlreadyVotedException {
+	public CommentVotesDto upVoteCommentById(Long commentId)
+			throws CommentNotFoundException, UserAlreadyVotedException {
 		Comment comment = commentrepo.findById(commentId)
 				.orElseThrow(() -> new CommentNotFoundException("Comment with id " + commentId + " doesnot exists"));
 		String user = SecurityContextHolder.getContext().getAuthentication().getName();
-		
+
 		Optional<CommentVotes> voteopt = commentvotesrepo.findIfUserHasAlreadyVoted(comment, user);
-		
-		if(voteopt.isEmpty()) {
+
+		if (voteopt.isEmpty()) {
 			CommentVotes commentvote = new CommentVotes();
 			commentvote.setComment(comment);
 			commentvote.setScore(1);
+			comment.increaseUpVoteCount();
+			commentrepo.save(comment);
 			return commentvotesmapper.toDto(commentvotesrepo.save(commentvote));
-		}else {
+		} else {
 			var vote = voteopt.get();
-			if(vote.getScore() == -1) {
+			if (vote.getScore() == -1) {
 				vote.setScore(1);
+				comment.increaseUpVoteCount();
+				comment.decreaseDownVoteCount();
+				commentrepo.save(comment);
 				return commentvotesmapper.toDto(commentvotesrepo.save(vote));
-			}else {
+			} else {
 				throw new UserAlreadyVotedException("Comment with Id " + commentId + " has already been up voted");
 			}
 		}
 	}
 
 	@Override
-	public CommentVotesDto downVoteCommentById(Long commentId) throws CommentNotFoundException, UserAlreadyVotedException {
+	public CommentVotesDto downVoteCommentById(Long commentId)
+			throws CommentNotFoundException, UserAlreadyVotedException {
 		Comment comment = commentrepo.findById(commentId)
 				.orElseThrow(() -> new CommentNotFoundException("Comment with id " + commentId + " doesnot exists"));
 		String user = SecurityContextHolder.getContext().getAuthentication().getName();
-		
+
 		Optional<CommentVotes> voteopt = commentvotesrepo.findIfUserHasAlreadyVoted(comment, user);
-		
-		if(voteopt.isEmpty()) {
+
+		if (voteopt.isEmpty()) {
 			CommentVotes commentvote = new CommentVotes();
 			commentvote.setComment(comment);
 			commentvote.setScore(-1);
+			comment.increaseDownVoteCount();
+			commentrepo.save(comment);
 			return commentvotesmapper.toDto(commentvotesrepo.save(commentvote));
-		}else {
+		} else {
 			var vote = voteopt.get();
-			if(vote.getScore() == 1) {
+			if (vote.getScore() == 1) {
 				vote.setScore(-1);
+				comment.increaseDownVoteCount();
+				comment.decreaseUpVoteCount();
+				commentrepo.save(comment);
 				return commentvotesmapper.toDto(commentvotesrepo.save(vote));
-			}else {
+			} else {
 				throw new UserAlreadyVotedException("Comment with Id " + commentId + " has already been downvoted");
 			}
 		}
-			
-			
+
 	}
 
 	@Override
 	public int isPostVotedByCurrentUser(Long postId) throws PostNotFoundException {
 		Post post = postrepo.findById(postId)
 				.orElseThrow(() -> new PostNotFoundException("Post with id " + postId + " doesnot exists"));
-		String user = SecurityContextHolder.getContext().getAuthentication().getName();	
-		Optional<PostVotes> vote = postvotesrepo.findIfUserHasAlreadyVoted(post, user);		
-		if(vote.isEmpty()) return 0;
+		String user = SecurityContextHolder.getContext().getAuthentication().getName();
+		Optional<PostVotes> vote = postvotesrepo.findIfUserHasAlreadyVoted(post, user);
+		if (vote.isEmpty())
+			return 0;
 		return vote.get().getScore();
 	}
 
@@ -160,9 +180,10 @@ public class VotesServiceImpl implements VotesService {
 	public int isCommentVotedByCurrentUser(Long commentId) throws CommentNotFoundException {
 		Comment comment = commentrepo.findById(commentId)
 				.orElseThrow(() -> new CommentNotFoundException("Comment with id " + commentId + " doesnot exists"));
-		String user = SecurityContextHolder.getContext().getAuthentication().getName();	
-		Optional<CommentVotes> vote = commentvotesrepo.findIfUserHasAlreadyVoted(comment, user);		
-		if(vote.isEmpty()) return 0;
+		String user = SecurityContextHolder.getContext().getAuthentication().getName();
+		Optional<CommentVotes> vote = commentvotesrepo.findIfUserHasAlreadyVoted(comment, user);
+		if (vote.isEmpty())
+			return 0;
 		return vote.get().getScore();
 	}
 }

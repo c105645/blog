@@ -39,6 +39,7 @@ public class PostserviceController {
 
 	private final PostService service;
 
+
 	public PostserviceController(PostService service) {
 		this.service = service;
 	}

@@ -22,7 +22,7 @@ public class PostVotes extends Base {
 	private int score;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "post_id", referencedColumnName = "id", insertable = false, updatable = false)
+	@JoinColumn(name = "post_id", referencedColumnName = "id")
 	@NotNull
     @JsonBackReference
 	private Post post;

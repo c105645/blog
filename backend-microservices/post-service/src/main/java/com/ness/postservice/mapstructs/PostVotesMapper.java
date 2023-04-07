@@ -9,7 +9,7 @@ import com.ness.postservice.entities.PostVotes;
 @Mapper(componentModel = "spring")
 public interface PostVotesMapper {
 
+	@Mapping(target = "post", ignore = true)
 	PostVotesDto toDto(PostVotes vote);
-	
 	PostVotes toEntity(PostVotesDto vote);
 }

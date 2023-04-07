@@ -34,5 +34,15 @@ public class PostControllerAdvice {
 
           return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
       }
+	  
+	  @ExceptionHandler(UserAlreadyVotedException.class)
+      @ResponseStatus(HttpStatus.CONFLICT)
+      public ResponseEntity<Object> userAlreadyVotedException(UserAlreadyVotedException ex, WebRequest req) {
+       Map<String, Object> body = new LinkedHashMap<>();
+          body.put("timestamp", LocalDateTime.now());
+          body.put("message", ex.getMessage());
+
+          return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+      }
 
 }
