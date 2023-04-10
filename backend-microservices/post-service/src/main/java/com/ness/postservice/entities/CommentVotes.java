@@ -24,7 +24,7 @@ public class CommentVotes extends Base {
 
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "comment_id", referencedColumnName = "id", insertable = false, updatable = false)
+	@JoinColumn(name = "comment_id", referencedColumnName = "id", updatable = false)
 	@NotNull
     @JsonBackReference
 	private Comment comment;

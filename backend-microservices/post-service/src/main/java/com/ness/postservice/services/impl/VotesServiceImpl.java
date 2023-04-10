@@ -112,6 +112,7 @@ public class VotesServiceImpl implements VotesService {
 	@Transactional()
 	public CommentVotesDto upVoteCommentById(Long commentId)
 			throws CommentNotFoundException, UserAlreadyVotedException {
+		System.out.println("commentId: " +  commentId);
 		Comment comment = commentrepo.findById(commentId)
 				.orElseThrow(() -> new CommentNotFoundException("Comment with id " + commentId + " doesnot exists"));
 		String user = SecurityContextHolder.getContext().getAuthentication().getName();

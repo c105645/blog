@@ -28,7 +28,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RequestMapping(VotesServiceController.POST_API_ENDPOINT)
 public class VotesServiceController {
 	
-	public static final String POST_API_ENDPOINT = "/api/v1/post/votes";
+	public static final String POST_API_ENDPOINT = "/api/v1/post/{postid}";
+	public static final String COMMENT_API_ENDPOINT = "/comment/{commentid}";
+
 
 	private final VotesService service;
 
@@ -38,7 +40,7 @@ public class VotesServiceController {
 
 
 	@ToLog
-	@PostMapping("/upvote/post/{postid}")
+	@PostMapping("/upvote")
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "upvote a post")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "upvote a post", content = {
@@ -55,7 +57,7 @@ public class VotesServiceController {
 	
 	
 	@ToLog
-	@PostMapping("/downvote/post/{postid}")
+	@PostMapping("/downvote")
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "downvote a post")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "upvote a post", content = {
@@ -73,7 +75,7 @@ public class VotesServiceController {
 
 	
 	@ToLog
-	@PostMapping("/upvote/comment/{commentid}")
+	@PostMapping(COMMENT_API_ENDPOINT + "/upvote")
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "upvote a comment")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "upvote a comment", content = {
@@ -91,7 +93,7 @@ public class VotesServiceController {
 	
 	
 	@ToLog
-	@PostMapping("/downvote/comment/{commentid}")
+	@PostMapping(COMMENT_API_ENDPOINT + "/downvote")
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "downvote a comment")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "downvote a post", content = {
@@ -108,7 +110,7 @@ public class VotesServiceController {
 	}
 	
 	@ToLog
-	@GetMapping("/post/{postid}")
+	@GetMapping("/hasvoted")
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "if user has voted the post")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "check if the current user has voted a post", content = {
@@ -124,7 +126,7 @@ public class VotesServiceController {
 	}
 
 	@ToLog
-	@GetMapping("/comment/{commentId}")
+	@GetMapping(COMMENT_API_ENDPOINT + "/hasvoted")
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "is comment voted by the current user")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "check if the current user has voted a comment", content = {
@@ -135,7 +137,7 @@ public class VotesServiceController {
 					@Content(schema = @Schema(hidden = true)) }),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = {
 					@Content(schema = @Schema(hidden = true)) }) })
-	public int checkIfCommentVotedByCurrentUser(@PathVariable Long commentId) throws CommentNotFoundException{
-		return service.isCommentVotedByCurrentUser(commentId);
+	public int checkIfCommentVotedByCurrentUser(@PathVariable Long commentid) throws CommentNotFoundException{
+		return service.isCommentVotedByCurrentUser(commentid);
 	}
 }
