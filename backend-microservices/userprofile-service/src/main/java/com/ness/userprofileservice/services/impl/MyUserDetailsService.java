@@ -14,6 +14,8 @@ import com.ness.userprofileservice.dtos.MyUserDetails;
 import com.ness.userprofileservice.entities.UserProfileEntity;
 import com.ness.userprofileservice.repositories.UserProfileRepository;
 
+import jakarta.transaction.Transactional;
+
 
 
 
@@ -27,6 +29,7 @@ public class MyUserDetailsService implements UserDetailsService {
 	}
 
   	@Override
+	@Transactional()
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		 UserProfileEntity savedUser = userRepo.findUserProfileByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User with Id" + username + "dont exist"));
 		 

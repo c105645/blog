@@ -7,13 +7,18 @@ import java.util.stream.Collectors;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.ness.userprofileservice.aspects.ToLog;
+import com.ness.userprofileservice.dtos.CategoryDto;
 import com.ness.userprofileservice.dtos.UserProfileDto;
+import com.ness.userprofileservice.entities.Category;
 import com.ness.userprofileservice.entities.UserProfileEntity;
+import com.ness.userprofileservice.exceptions.CategoryAlreadyExistsException;
+import com.ness.userprofileservice.exceptions.CategoryNotFoundException;
 import com.ness.userprofileservice.exceptions.OperationNotAllowedException;
 import com.ness.userprofileservice.exceptions.UserAlreadyExistsException;
 import com.ness.userprofileservice.exceptions.UserNotFoundException;
+import com.ness.userprofileservice.mapstructmappers.CategoryMapper;
 import com.ness.userprofileservice.mapstructmappers.UserProfileMapper;
+import com.ness.userprofileservice.repositories.CategoryRepository;
 import com.ness.userprofileservice.repositories.UserProfileRepository;
 import com.ness.userprofileservice.services.UserProfileService;
 
@@ -24,13 +29,20 @@ public class UserProfileServiceImpl implements UserProfileService{
 	
 	
 	private final UserProfileRepository repository;
+	private final CategoryRepository catrepo;
+
 	private final UserProfileMapper usermapper;
+	private final CategoryMapper catmapper;
+
 	private final PasswordEncoder passwordEncoder;
 
-	public UserProfileServiceImpl(UserProfileRepository repository, UserProfileMapper usermapper, PasswordEncoder passwordEncoder) {
+	public UserProfileServiceImpl(UserProfileRepository repository,CategoryRepository catrepo,
+			CategoryMapper catmapper, UserProfileMapper usermapper, PasswordEncoder passwordEncoder) {
 		this.repository = repository;
 		this.usermapper = usermapper;
 		this.passwordEncoder=passwordEncoder;
+		this.catrepo = catrepo;
+		this.catmapper = catmapper;
 	}
 
 	@Override
@@ -133,6 +145,36 @@ public class UserProfileServiceImpl implements UserProfileService{
     public List<UserProfileDto> getFollowing(Long userId) throws UserNotFoundException {
         UserProfileEntity user =  repository.findById(userId).orElseThrow(() -> new UserNotFoundException("user not found"));
     	return user.getFollowing().stream().map(item->usermapper.toDto(item)).collect(Collectors.toList());    			
+    }
+
+	
+	@Transactional()
+	@Override
+	public CategoryDto addNewCategoery(CategoryDto categoery) throws CategoryAlreadyExistsException {
+		 Optional<Category> catent = catrepo.findByName(categoery.name());
+         
+	       if(catent.isEmpty()) {
+	    	   return  catmapper.toDto(catrepo.save(catmapper.toEntity(categoery)));
+	       }else {
+	    	   throw new CategoryAlreadyExistsException("Category with name alredy exists");
+	       }     
+	}
+	
+	@Override
+    @Transactional()
+	public CategoryDto updateCategoery(Long id, CategoryDto category) throws CategoryNotFoundException {
+    	catrepo.findById(id).orElseThrow(() -> new CategoryNotFoundException("Category Not Found")); 
+    	Category catentity = catmapper.toEntity(category);
+    	Category savedEntity =  catrepo.save(catentity);
+		return catmapper.toDto(savedEntity); 
+    }
+
+	
+	@Override
+    @Transactional()
+    public void deleteCategoery(Long id) throws CategoryNotFoundException {
+    	catrepo.findById(id).orElseThrow(() -> new CategoryNotFoundException("Category Not Found"));
+		catrepo.deleteById(id);	
     }
 
 

@@ -11,7 +11,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "post_comment")
@@ -103,7 +102,7 @@ public class Comment extends Base {
 
 	@Override
 	public String toString() {
-		return "Comment [post=" + post + ", review=" + review + ", upVoteCount=" + upVoteCount + ", downVoteCount="
+		return "Comment [review=" + review + ", upVoteCount=" + upVoteCount + ", downVoteCount="
 				+ downVoteCount + ", id=" + id +  ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
 	}
 

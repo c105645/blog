@@ -4,7 +4,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.ness.userprofileservice.dtos.CategoryDto;
 import com.ness.userprofileservice.dtos.UserProfileDto;
+import com.ness.userprofileservice.exceptions.CategoryAlreadyExistsException;
+import com.ness.userprofileservice.exceptions.CategoryNotFoundException;
 import com.ness.userprofileservice.exceptions.OperationNotAllowedException;
 import com.ness.userprofileservice.exceptions.UserAlreadyExistsException;
 import com.ness.userprofileservice.exceptions.UserNotFoundException;
@@ -16,6 +19,13 @@ public interface UserProfileService {
 
 
 	UserProfileDto registerUser(UserProfileDto user) throws UserAlreadyExistsException;
+	
+	CategoryDto addNewCategoery(CategoryDto categoery) throws CategoryAlreadyExistsException;
+	CategoryDto updateCategoery(Long id, CategoryDto categoery) throws CategoryNotFoundException;
+	void deleteCategoery(Long id) throws CategoryNotFoundException;
+
+
+
 
 	UserProfileDto updateUser(Long userId,@Valid UserProfileDto user) throws UserNotFoundException, OperationNotAllowedException;
 

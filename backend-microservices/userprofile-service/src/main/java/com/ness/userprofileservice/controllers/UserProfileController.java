@@ -12,12 +12,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.ness.userprofileservice.aspects.ToLog;
+import com.ness.userprofileservice.dtos.CategoryDto;
 import com.ness.userprofileservice.dtos.FollowRequest;
 import com.ness.userprofileservice.dtos.UnFollowRequest;
 import com.ness.userprofileservice.dtos.UserProfileDto;
+import com.ness.userprofileservice.entities.Category;
+import com.ness.userprofileservice.exceptions.CategoryAlreadyExistsException;
+import com.ness.userprofileservice.exceptions.CategoryNotFoundException;
 import com.ness.userprofileservice.exceptions.OperationNotAllowedException;
 import com.ness.userprofileservice.exceptions.UserAlreadyExistsException;
 import com.ness.userprofileservice.exceptions.UserNotFoundException;
@@ -44,6 +47,11 @@ public class UserProfileController {
 	  public static final String UNFOLLOW = "/unfollow";
 	  public static final String FOLLOWERS = "/followers";
 	  public static final String FOLLOWING = "/following";
+	  public static final String CATEGORIES = "/categoery";
+	  public static final String CATEGOERY = "/categoery/{id}";
+
+
+	  
 
 	  private final UserProfileService service;
 		
@@ -197,5 +205,51 @@ public class UserProfileController {
 	 public List<UserProfileDto> fetchAllFollowing(@PathVariable @Valid Long Id) throws UserNotFoundException {
 	    return service.getFollowing(Id);     	
     }
+	 
+	 
+	 
+	 @ToLog
+	 @PostMapping(CATEGORIES)
+	 @ResponseStatus(HttpStatus.CREATED)
+	   @Operation(summary = "Add a new categoery")
+	    @ApiResponses(value = {
+	            @ApiResponse(responseCode = "201", description = "categoery added", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UserProfileDto.class))}),
+	            @ApiResponse(responseCode = "409", description = "categoery already exists", content = {@Content(schema = @Schema(hidden = true))}),
+	            @ApiResponse(responseCode = "401", description = "Un-Authorized user", content = {@Content(schema = @Schema(hidden = true))}),
+	            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = {@Content(schema = @Schema(hidden = true))})
+	    })
+	 public CategoryDto addCategoery(@Valid @RequestBody CategoryDto category) throws CategoryAlreadyExistsException {
+	    return service.addNewCategoery(category);     	
+   }
+	 
+	 
+	 @ToLog
+	 @PutMapping(CATEGORIES)
+	 @ResponseStatus(HttpStatus.CREATED)
+	   @Operation(summary = "update a categoery")
+	    @ApiResponses(value = {
+	            @ApiResponse(responseCode = "201", description = "categoery updated", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UserProfileDto.class))}),
+	            @ApiResponse(responseCode = "404", description = "categoery doesnot exists", content = {@Content(schema = @Schema(hidden = true))}),
+	            @ApiResponse(responseCode = "401", description = "Un-Authorized user", content = {@Content(schema = @Schema(hidden = true))}),
+	            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = {@Content(schema = @Schema(hidden = true))})
+	    })
+	 public CategoryDto updateCategoery(@Valid @RequestBody CategoryDto category) throws CategoryNotFoundException {
+	    return service.updateCategoery(category.id(), category);     	
+   }
+	 
+	 
+	 @ToLog
+	 @DeleteMapping(CATEGOERY)
+	 @ResponseStatus(HttpStatus.OK)
+	   @Operation(summary = "delete a categoery")
+	    @ApiResponses(value = {
+	            @ApiResponse(responseCode = "201", description = "categoery deleted", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UserProfileDto.class))}),
+	            @ApiResponse(responseCode = "404", description = "categoery doesnot exists", content = {@Content(schema = @Schema(hidden = true))}),
+	            @ApiResponse(responseCode = "401", description = "Un-Authorized user", content = {@Content(schema = @Schema(hidden = true))}),
+	            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = {@Content(schema = @Schema(hidden = true))})
+	    })
+	 public void deleteCategoery(@PathVariable Long id) throws CategoryNotFoundException {
+	     service.deleteCategoery(id);     	
+   }
 
 }

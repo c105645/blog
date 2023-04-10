@@ -10,9 +10,9 @@ import com.ness.postservice.exceptions.PostNotFoundException;
 
 public interface CommentService {
 	
-	  CommentDto create(CommentDto comment);
+	  CommentDto create(Long postid, CommentDto comment) throws PostNotFoundException;
 
-	  CommentDto update(CommentDto comment);
+	  CommentDto update(Long postid, CommentDto comment);
 	  
 	  void delete(Long commentid)throws CommentNotFoundException;
 

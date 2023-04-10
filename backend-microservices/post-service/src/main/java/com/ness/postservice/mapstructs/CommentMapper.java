@@ -10,9 +10,9 @@ import com.ness.postservice.entities.Comment;
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
 	
-	@Mapping(target = "post", ignore = true)
 	CommentDto toDto(Comment comment);
 	
+	@Mapping(target = "post", ignore = true)
 	Comment toEntity(CommentDto comment);
 
 }

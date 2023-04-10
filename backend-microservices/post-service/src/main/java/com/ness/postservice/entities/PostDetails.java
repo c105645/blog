@@ -81,7 +81,7 @@ public class PostDetails extends Base {
 
 	@Override
 	public String toString() {
-		return "PostDetails [post=" + post + ", content=" + content + ", imageUrl=" + imageUrl + ", id=" + id
+		return "PostDetails [content=" + content + ", imageUrl=" + imageUrl + ", id=" + id
 				+ ", createdBy =" + createdBy + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
 	}
 

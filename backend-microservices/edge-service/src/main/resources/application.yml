@@ -31,6 +31,10 @@ spring:
           uri: ${USERPROFILE_SERVICE_URL:http://localhost:9010}/api/v1/userprofile
           predicates:
             - Path=/api/v1/userprofile/**
+        - id: post-route
+          uri: ${POST_SERVICE_URL:http://localhost:9020}/api/v1/post
+          predicates:
+            - Path=/api/v1/post/**     
            
 management:
   endpoints:

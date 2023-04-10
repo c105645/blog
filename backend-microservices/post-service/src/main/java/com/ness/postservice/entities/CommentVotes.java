@@ -48,7 +48,7 @@ public class CommentVotes extends Base {
 
 	@Override
 	public String toString() {
-		return "CommentVotes [score=" + score + ", createdBy=" + createdBy + ", comment=" + comment + ", id=" + id
+		return "CommentVotes [score=" + score + ", createdBy=" + createdBy  + ", id=" + id
 				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
 	}
 

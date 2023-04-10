@@ -21,6 +21,8 @@ import com.ness.postservice.repositories.CommentRepository;
 import com.ness.postservice.repositories.PostRepository;
 import com.ness.postservice.services.CommentService;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class CommentServiceImpl implements CommentService{
 
@@ -36,6 +38,7 @@ public class CommentServiceImpl implements CommentService{
 	}
 
 	@Override
+	@Transactional()
 	public CommentDto getCommentById(long id) throws CommentNotFoundException {
 		Comment comment = repo.findById(id)
 				.orElseThrow(() -> new CommentNotFoundException("Comment with id " + id + " doesnot exists"));
@@ -43,24 +46,34 @@ public class CommentServiceImpl implements CommentService{
 	}
 
 	@Override
-	public CommentDto create(CommentDto comment) {
+	@Transactional()
+	public CommentDto create(Long postid, CommentDto comment) throws PostNotFoundException {
+		Post post = postrepo.findById(postid)
+				.orElseThrow(() -> new PostNotFoundException("Post with id " + postid + " doesnot exists"));
+		
+		Comment commentEntity = mapper.toEntity(comment);
+		
+		commentEntity.setPost(post);
+		Comment com =  repo.save(commentEntity);
+		return mapper.toDto(com);
+	}
+
+	@Override
+	@Transactional()
+	public CommentDto update(Long postid, CommentDto comment) {
 		Comment com =  repo.save(mapper.toEntity(comment));
 		return mapper.toDto(com);
 	}
 
 	@Override
-	public CommentDto update(CommentDto comment) {
-		Comment com =  repo.save(mapper.toEntity(comment));
-		return mapper.toDto(com);
-	}
-
-	@Override
+	@Transactional()
 	public void delete(Long commentid) throws CommentNotFoundException {
 		repo.findById(commentid).orElseThrow(() -> new CommentNotFoundException("comment with id " + commentid + " doesnot exists"));
 		repo.deleteById(commentid);
 	}
 
 	@Override
+	@Transactional()
 	public List<CommentDto> getCommentListOfPostByPage(Long postId, Pageable pageable) throws PostNotFoundException {
 		Post post = postrepo.findById(postId)
 				.orElseThrow(() -> new PostNotFoundException("Post with id " + postId + " doesnot exists"));
@@ -69,22 +82,19 @@ public class CommentServiceImpl implements CommentService{
 	}
 
 	@Override
+	@Transactional()
 	public boolean isPostCommentedByCurrentUser(Long postId) throws PostNotFoundException {
 		Post post = postrepo.findById(postId)
 				.orElseThrow(() -> new PostNotFoundException("Post with id " + postId + " doesnot exists"));
 		String user = SecurityContextHolder.getContext().getAuthentication().getName();
-		
-		Comment commentProbe = new Comment();
-		commentProbe.setPost(post);
-		commentProbe.setCreatedBy(user);
-		
-		Example<Comment> commentExample = Example.of(commentProbe);
+				
 
-		List<Comment> comments = repo.findAll(commentExample);
+		List<Comment> comments = repo.findAllByCreatedByAndPost(post, user);
 		return comments.size() > 0;
 	}
 
 	@Override
+	@Transactional()
 	public List<CommentDto> getMostVotedCommentsOfaPost(Long postId, Pageable pageable) throws PostNotFoundException{
 		Post post = postrepo.findById(postId)
 				.orElseThrow(() -> new PostNotFoundException("Post with id " + postId + " doesnot exists"));

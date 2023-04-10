@@ -16,11 +16,27 @@ services:
       - SPRING_DATASOURCE_USERNAME=user
       - SPRING_DATASOURCE_PASSWORD=password
       - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
+
+  post-service:
+    depends_on:
+      - config-service  
+      - blog-postgres
+    image: "ranjithdoc/post-service"
+    container_name: "post-service"
+    ports:
+      - 9020:9020
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://blog-postgres:5432/blogdb
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
       
   edge-service:
     depends_on:
       - config-service   
       - blog-postgres
+      - userprofile-service
+      - post-service
     image: "ranjithdoc/edge-service"
     container_name: "edge-service"
     ports:
@@ -51,7 +67,7 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=blogdb      
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
 volumes:
-  postgres_data:
+  pgdata:
     driver: local

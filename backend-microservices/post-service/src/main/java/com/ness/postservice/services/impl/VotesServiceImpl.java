@@ -22,6 +22,8 @@ import com.ness.postservice.repositories.PostRepository;
 import com.ness.postservice.repositories.PostVotesRepository;
 import com.ness.postservice.services.VotesService;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class VotesServiceImpl implements VotesService {
 
@@ -47,6 +49,7 @@ public class VotesServiceImpl implements VotesService {
 	}
 
 	@Override
+	@Transactional()
 	public PostVotesDto upVotePostById(Long postId) throws UserAlreadyVotedException, PostNotFoundException {
 		Post post = postrepo.findById(postId)
 				.orElseThrow(() -> new PostNotFoundException("Post with id " + postId + " doesnot exists"));
@@ -76,6 +79,7 @@ public class VotesServiceImpl implements VotesService {
 	}
 
 	@Override
+	@Transactional()
 	public PostVotesDto downVotePostById(Long postId) throws PostNotFoundException, UserAlreadyVotedException {
 		Post post = postrepo.findById(postId)
 				.orElseThrow(() -> new PostNotFoundException("Post with id " + postId + " doesnot exists"));
@@ -105,6 +109,7 @@ public class VotesServiceImpl implements VotesService {
 	}
 
 	@Override
+	@Transactional()
 	public CommentVotesDto upVoteCommentById(Long commentId)
 			throws CommentNotFoundException, UserAlreadyVotedException {
 		Comment comment = commentrepo.findById(commentId)
@@ -135,6 +140,7 @@ public class VotesServiceImpl implements VotesService {
 	}
 
 	@Override
+	@Transactional()
 	public CommentVotesDto downVoteCommentById(Long commentId)
 			throws CommentNotFoundException, UserAlreadyVotedException {
 		Comment comment = commentrepo.findById(commentId)
@@ -166,6 +172,7 @@ public class VotesServiceImpl implements VotesService {
 	}
 
 	@Override
+	@Transactional()
 	public int isPostVotedByCurrentUser(Long postId) throws PostNotFoundException {
 		Post post = postrepo.findById(postId)
 				.orElseThrow(() -> new PostNotFoundException("Post with id " + postId + " doesnot exists"));
@@ -177,6 +184,7 @@ public class VotesServiceImpl implements VotesService {
 	}
 
 	@Override
+	@Transactional()
 	public int isCommentVotedByCurrentUser(Long commentId) throws CommentNotFoundException {
 		Comment comment = commentrepo.findById(commentId)
 				.orElseThrow(() -> new CommentNotFoundException("Comment with id " + commentId + " doesnot exists"));

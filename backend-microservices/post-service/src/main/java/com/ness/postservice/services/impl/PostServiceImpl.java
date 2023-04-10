@@ -19,6 +19,8 @@ import com.ness.postservice.mapstructs.PostsListMapper;
 import com.ness.postservice.repositories.PostRepository;
 import com.ness.postservice.services.PostService;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class PostServiceImpl implements PostService {
 
@@ -33,6 +35,7 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
+	@Transactional()
 	public PostDto getPostById(long id) throws PostNotFoundException {
 		Post post = repo.findById(id)
 				.orElseThrow(() -> new PostNotFoundException("Post with id " + id + " doesnot exists"));
@@ -40,12 +43,14 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
+	@Transactional()
 	public List<PostDto> getPostListByPage(Pageable pageable) {
 		List<Post> posts = repo.findAll(pageable).getContent();
 		return posts.stream().map(post -> postlistmapper.toDto(post)).collect(Collectors.toList());
 	}
 
 	@Override
+	@Transactional()
 	public List<PostDto> getMostVotedPosts(Pageable pageable) {
 		TypedSort<Post> postTypedSort = Sort.sort(Post.class);
 		Sort sortByUpVoteCount = postTypedSort.by(Post::getUpVoteCount).descending();
@@ -55,6 +60,7 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
+	@Transactional()
 	public List<PostDto> getMostCommentedPosts(Pageable pageable) {
 		TypedSort<Post> postTypedSort = Sort.sort(Post.class);
 		Sort sortByCommentsCount = postTypedSort.by(Post::getCommentCount).descending();
@@ -65,6 +71,7 @@ public class PostServiceImpl implements PostService {
 
 
 	@Override
+	@Transactional()
 	public List<PostDto> getMostVotedPostsByCategory(String category, Pageable pageable) {
 		TypedSort<Post> postTypedSort = Sort.sort(Post.class);
 		Sort sortByUpVoteCount = postTypedSort.by(Post::getUpVoteCount).descending();
@@ -74,6 +81,7 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
+	@Transactional()
 	public List<PostDto> getMostCommentedPostsByCategory(String category, Pageable pageable) {
 		TypedSort<Post> postTypedSort = Sort.sort(Post.class);
 		Sort sortByCommentsCount = postTypedSort.by(Post::getCommentCount).descending();
@@ -83,18 +91,21 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
+	@Transactional()
 	public PostDto create(PostDto post) {
 		Post postentity = repo.save(postmapper.toEntity(post));
 		return postmapper.toDto(postentity);
 	}
 
 	@Override
+	@Transactional()
 	public PostDto update(PostDto post) {
 		Post postentity = repo.save(postmapper.toEntity(post));
 		return postmapper.toDto(postentity);
 	}
 
 	@Override
+	@Transactional()
 	public void delete(Long id) throws PostNotFoundException {
 		repo.findById(id).orElseThrow(() -> new PostNotFoundException("Post with id " + id + " doesnot exists"));
 
@@ -102,6 +113,7 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
+	@Transactional()
 	public List<PostDto> getPostsCreatedByCurrentUser(Pageable pageable) {
 		String user = SecurityContextHolder.getContext().getAuthentication().getName();
 		Post  postProbe = new Post();

@@ -36,6 +36,7 @@ public class AuthControllerAdvice {
 
                     return new ResponseEntity<>(body, HttpStatus.CONFLICT);
             }
+                      
             
             @ExceptionHandler(OperationNotAllowedException.class)
             @ResponseStatus(HttpStatus.FORBIDDEN)
@@ -70,5 +71,25 @@ public class AuthControllerAdvice {
 
             }
 
+            @ExceptionHandler(CategoryAlreadyExistsException.class)
+            @ResponseStatus(HttpStatus.CONFLICT)
+            public ResponseEntity<Object>  categoryAlreadyExistsHandler(CategoryAlreadyExistsException ex, WebRequest req) {
+                 Map<String, Object> body = new LinkedHashMap<>();
+                    body.put("timestamp", LocalDateTime.now());
+                    body.put("message", ex.getMessage());
 
+                    return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+            }
+            
+            
+            
+            @ExceptionHandler(CategoryNotFoundException.class)
+            @ResponseStatus(HttpStatus.NOT_FOUND)
+            public ResponseEntity<Object> categoryNotFoundHandler(CategoryNotFoundException ex, WebRequest req) {
+             Map<String, Object> body = new LinkedHashMap<>();
+                body.put("timestamp", LocalDateTime.now());
+                body.put("message", ex.getMessage());
+
+                return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+            }
     }

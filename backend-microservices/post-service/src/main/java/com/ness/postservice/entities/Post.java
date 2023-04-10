@@ -214,7 +214,7 @@ public class Post extends Base {
 
 	@Override
 	public String toString() {
-		return "Post [title=" + title + ", short_description=" + short_description + ", comments=" + comments
+		return "Post [title=" + title + ", short_description=" + short_description + ", " 
 				+ ", postDetails=" + postDetails + ", tags=" + tags + ", category=" + category + ", createdBy=" + createdBy
 				+ ", commentCount=" + commentCount + ", upVoteCount=" + upVoteCount + ", downVoteCount=" + downVoteCount
 				+ ", id=" + id + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
