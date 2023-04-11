@@ -42,7 +42,6 @@ management:
       exposure:
         include: refresh
         
-  
         
 rsa:
   public-key: classpath:certs/public.pem

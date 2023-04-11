@@ -2,7 +2,6 @@ version: "3.8"
 services:
 
   # Applications
-
   userprofile-service:
     depends_on:
       - config-service  
@@ -43,6 +42,7 @@ services:
       - 9000:9000
     environment:
       - USERPROFILE_SERVICE_URL=http://userprofile-service:9010
+      - POST_SERVICE_URL=http://post-service:9020
       - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
       
   config-service:

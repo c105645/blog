@@ -35,6 +35,7 @@ import jakarta.validation.Valid;
 public class PostserviceController {
 
 	public static final String POST_API_ENDPOINT = "/api/v1/post";
+	
 	public static final String COMMENT = "/comment";
 
 	private final PostService service;

@@ -43,7 +43,9 @@ spring:
         max-attempts: 6
         initial-interval: 2000 # 1s
         max-interval: 3000 # 2s
-        multiplier: 1.1      
+        multiplier: 1.1   
+
+             
 rsa:
   private-key: classpath:certs/private.pem
   public-key: classpath:certs/public.pem
