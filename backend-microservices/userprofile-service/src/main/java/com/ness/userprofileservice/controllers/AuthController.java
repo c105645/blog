@@ -2,12 +2,15 @@ package com.ness.userprofileservice.controllers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ness.userprofileservice.aspects.ToLog;
@@ -19,7 +22,12 @@ import com.ness.userprofileservice.exceptions.UserNotFoundException;
 import com.ness.userprofileservice.services.UserProfileService;
 import com.ness.userprofileservice.services.impl.TokenService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(AuthController.AUTH_API_ENDPOINT)
@@ -43,7 +51,15 @@ public class AuthController {
     }
     @ToLog
     @PostMapping("/login")
-    public LoginResponse token(@RequestBody LoginRequest user) throws UserNotFoundException {
+	@ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Login")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Login added", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = LoginRequest.class))}),
+            @ApiResponse(responseCode = "404", description = "User not found", content = {@Content(schema = @Schema(hidden = true))}),
+            @ApiResponse(responseCode = "401", description = "Un-Authorized user", content = {@Content(schema = @Schema(hidden = true))}),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = {@Content(schema = @Schema(hidden = true))})
+    })
+    public LoginResponse token(@Valid @RequestBody LoginRequest user) throws UserNotFoundException {
         LOG.info("Token requested for user: '{}'", user.username());
     	Authentication a = new UsernamePasswordAuthenticationToken(user.username(), user.password());
         Authentication auth = manager.authenticate(a);
