@@ -10,7 +10,6 @@ public record PostDetailDto(
 		@NotBlank(message="content cannot be blank")
 		@Size(message = "content should be atleast 50 characters", min = 50)
 		String content,
-		String imageUrl,
 		LocalDate createdAt,
 		LocalDate updatedAt,
 		String createdBy

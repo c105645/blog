@@ -41,10 +41,7 @@ public class Post extends Base {
 	@JsonManagedReference
 	private PostDetails postDetails;
 
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	@JoinTable(name = "post_tag", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
-	@JsonManagedReference
-	private List<Tag> tags = new ArrayList<>();
+	private String imageUrl;
 
 	private String category;
 
@@ -163,24 +160,6 @@ public class Post extends Base {
 		}
 	}
 
-	public List<Tag> getTags() {
-		return tags;
-	}
-
-	public void setTags(List<Tag> tags) {
-		this.tags = tags;
-	}
-	
-
-	public Post addTag(Tag tag) {
-		tags.add(tag);
-		return this;
-	}
-	
-	public Post removeTag(Tag tag) {
-		tags.remove(tag);
-		return this;
-	}
 
 	public String getCategory() {
 		return category;
@@ -215,9 +194,17 @@ public class Post extends Base {
 	@Override
 	public String toString() {
 		return "Post [title=" + title + ", short_description=" + short_description + ", " 
-				+ ", postDetails=" + postDetails + ", tags=" + tags + ", category=" + category + ", createdBy=" + createdBy
+				+ ", postDetails=" + postDetails + ", imageUrl=" + imageUrl + ", category=" + category + ", createdBy=" + createdBy
 				+ ", commentCount=" + commentCount + ", upVoteCount=" + upVoteCount + ", downVoteCount=" + downVoteCount
 				+ ", id=" + id + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
 	public void setCreatedBy(String user) {

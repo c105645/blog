@@ -1,45 +1,117 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import useAuth from "../hooks/useAuth";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
+import { FaSearch, FaSignOutAlt, FaEdit, FaSignInAlt } from "react-icons/fa";
+import { BsPersonCircle } from "react-icons/bs";
+import {
+  Button,
+  InputGroup,
+  Nav,
+  Navbar,
+  NavbarBrand,
+  NavItem,
+} from "reactstrap";
+import { useNavigate } from 'react-router-dom';
+
+import "./Header.css";
+import logo from '../svg/logo.svg';
+
+import { Link, useLocation } from "react-router-dom";
 
 const Header = () => {
-  const { auth } = useAuth();
+  const { auth, setAuth } = useAuth();
   const [searchInput, setSearchInput] = useState("");
-  
-  const handleChange = (e) => {
-    e.preventDefault();
-    setSearchInput(e.target.value);
-  };
+  const navigate = useNavigate();
+
+  const location = useLocation();
+
+  const handleLogOut = () => {
+    console.log("handleLogOut");
+    setAuth(null);
+    navigate('/login')
+  }
 
   const handleSearch = (e) => {
     e.preventDefault();
     setSearchInput(e.target.value);
   };
 
+
+
   return (
-    <div>
-      <h1>My Blog</h1>
-      <InputGroup className="mb-3">
-        <Form.Control
-          type="text"
-          id="searchInput"
-          autoComplete="off"
-          onChange={(e) => setSearchInput(e.target.value)}
-          value={searchInput}
-          placeholder="Search here..."
-          aria-label="search"
-          aria-describedby="search-box"
-        />
-        <Button type="button" onClick={handleSearch} >
-        <FontAwesomeIcon size="xs" icon={faSearch} />
-        </Button>
-      </InputGroup>
-      {auth?.user?.username}
-    </div>
+    (!auth?.user && (
+      <>
+        <div className="header-tile">
+        <img src={logo} className="App-logo" alt="logo" />
+          {location.pathname == "/login" ? (
+            <span className="link">
+              <Link to="/register">Sign Up</Link>
+            </span>
+          ) : (
+            <span className="link">
+              <Link to="/login">Sign In</Link>
+            </span>
+          )}
+        </div>
+      </>
+    )) ||
+    (auth?.user && (
+      <>
+        <Navbar
+          expand="lg"
+          sticky="top"
+          className="header-tile"
+        >
+          <Nav className="ml-auto" navbar>
+            <NavbarBrand>
+                <Link to="/">
+                  <span><img src={logo} className="App-logo" alt="logo" /></span>
+                </Link>
+            </NavbarBrand>
+            <NavItem>
+              <InputGroup className="navbar-inputgroup">
+                <input
+                  type="text"
+                  id="searchInput"
+                  autoComplete="off"
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  value={searchInput}
+                  placeholder="Search here..."
+                  aria-label="search"
+                  aria-describedby="search-box"
+                />
+                <Button onClick={handleSearch} color="secondary">
+                  <FaSearch />
+                </Button>
+              </InputGroup>
+            </NavItem>
+          </Nav>
+          <Nav className="mr-auto" navbar>
+            <NavItem className="mt-1">
+              <Button outline style={{"borderStyle": "none", "outline":"none"}}>
+                <FaEdit />
+              </Button>
+            </NavItem>
+            <NavItem style={{"marginTop": "14px"}}>
+              <p>
+                <span>
+                &nbsp;&nbsp;<BsPersonCircle />
+                </span>
+                &nbsp;{auth.user.username}&nbsp;&nbsp;
+              </p>
+            </NavItem>
+            <NavItem className="mt-1">
+             {auth?.user &&  (<Button outline style={{"borderStyle": "none", "outline":"none"}} onClick={handleLogOut}>
+                <FaSignOutAlt />
+              </Button>)}
+
+              {!auth?.user && (<Button outline style={{"borderStyle": "none", "outline":"none"}} >
+                <FaSignInAlt />
+              </Button>)}
+            </NavItem>
+          </Nav>
+        </Navbar>
+      </>
+    ))
   );
 };
 export default Header;

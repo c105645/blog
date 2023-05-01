@@ -1,0 +1,14 @@
+.header-tile {
+    display:flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: baseline;
+    background-color: aliceblue;
+    padding: 0 10px;
+}
+
+.navbar-inputgroup {
+    height: 30px !important;
+    margin: 10px;
+
+}

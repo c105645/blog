@@ -22,5 +22,8 @@ public interface VotesService {
 	  int isPostVotedByCurrentUser(Long postid) throws PostNotFoundException; //-1 downvoted; 1 upvoted 0 not voted
 
 	  int isCommentVotedByCurrentUser(Long commentid) throws CommentNotFoundException;//-1 downvoted; 1 upvoted 0 not voted
+	  void deletePostVotes(Long PostId) throws PostNotFoundException;
+	  void deleteCommentVotes(Long CommentId) throws CommentNotFoundException;
+
 
 }

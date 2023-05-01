@@ -1,5 +1,6 @@
 package com.ness.postservice.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,6 +15,9 @@ public interface PostVotesRepository extends JpaRepository<PostVotes, Long> {
 	
 	@Query("select v from PostVotes v where v.post= ?1 and v.createdBy=?2")
 	Optional<PostVotes> findIfUserHasAlreadyVoted(Post post, String user);
+
+	@Query("select v from PostVotes v where v.post= ?1")
+	List<PostVotes> findAllByPost(Post post);
 	
 	
 	

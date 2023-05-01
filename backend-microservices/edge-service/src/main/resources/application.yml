@@ -26,7 +26,9 @@ spring:
         max-interval: 3000 # 2s
         multiplier: 1.1   
     gateway:
-      routes:
+       default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+       routes:
         - id: userprofile-route
           uri: ${USERPROFILE_SERVICE_URL:http://localhost:9010}/api/v1/userprofile
           predicates:

@@ -46,6 +46,10 @@ public interface UserProfileService {
   void unfollow(Long userId, Long toUnFollowId) throws UserNotFoundException;
 	
   void addFollower(Long userId, Long toFollowId) throws UserNotFoundException;
+  
+  void addTopic(Long topicId) throws CategoryNotFoundException, UserNotFoundException;
+
+void removeTopic(Long topicId) throws CategoryNotFoundException, UserNotFoundException;
 
 }
 

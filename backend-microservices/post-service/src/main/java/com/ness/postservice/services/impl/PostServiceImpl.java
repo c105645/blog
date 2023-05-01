@@ -17,7 +17,9 @@ import com.ness.postservice.exceptions.PostNotFoundException;
 import com.ness.postservice.mapstructs.PostMapper;
 import com.ness.postservice.mapstructs.PostsListMapper;
 import com.ness.postservice.repositories.PostRepository;
+import com.ness.postservice.repositories.PostVotesRepository;
 import com.ness.postservice.services.PostService;
+import com.ness.postservice.services.VotesService;
 
 import jakarta.transaction.Transactional;
 
@@ -25,11 +27,14 @@ import jakarta.transaction.Transactional;
 public class PostServiceImpl implements PostService {
 
 	private final PostRepository repo;
+	private final VotesService votesservice;
+
 	private final PostMapper postmapper;
 	private final PostsListMapper postlistmapper;
 
-	public PostServiceImpl(PostRepository repo, PostMapper postmapper, PostsListMapper postlistmapper) {
+	public PostServiceImpl(PostRepository repo, VotesService votesservice, PostMapper postmapper, PostsListMapper postlistmapper) {
 		this.repo = repo;
+		this.votesservice = votesservice;
 		this.postmapper = postmapper;
 		this.postlistmapper = postlistmapper;
 	}
@@ -108,7 +113,7 @@ public class PostServiceImpl implements PostService {
 	@Transactional()
 	public void delete(Long id) throws PostNotFoundException {
 		repo.findById(id).orElseThrow(() -> new PostNotFoundException("Post with id " + id + " doesnot exists"));
-
+		votesservice.deletePostVotes(id);
 		repo.deleteById(id);
 	}
 

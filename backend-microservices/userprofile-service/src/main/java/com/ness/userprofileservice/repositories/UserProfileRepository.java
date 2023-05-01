@@ -12,6 +12,7 @@ import com.ness.userprofileservice.entities.UserProfileEntity;
 @Repository
 public interface UserProfileRepository extends JpaRepository<UserProfileEntity, Long>{
 	
+	@Query("select u from UserProfileEntity u where u.username=?1")
 	public Optional<UserProfileEntity> findUserProfileByUsername(String username);
 		
 	public Optional<UserProfileEntity> findUserProfileByEmail(String email);

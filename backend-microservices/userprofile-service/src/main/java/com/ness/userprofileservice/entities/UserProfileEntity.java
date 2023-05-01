@@ -157,6 +157,7 @@ public class UserProfileEntity extends Base{
 	public void setCategories(List<Category> categories) {
 		this.categories = categories;
 	}
+	   
 	public void setisAdmin(boolean isAdmin) {
 		this.isAdmin = isAdmin;
 	}

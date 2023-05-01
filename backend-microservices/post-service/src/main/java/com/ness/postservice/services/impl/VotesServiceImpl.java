@@ -1,5 +1,6 @@
 package com.ness.postservice.services.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -195,4 +196,25 @@ public class VotesServiceImpl implements VotesService {
 			return 0;
 		return vote.get().getScore();
 	}
+
+	@Override
+	@Transactional()
+	public void deletePostVotes(Long postId) throws PostNotFoundException {
+		Post post = postrepo.findById(postId)
+				.orElseThrow(() -> new PostNotFoundException("Post with id " + postId + " doesnot exists"));
+		List<PostVotes> votes = postvotesrepo.findAllByPost(post);
+		postvotesrepo.deleteAll(votes);
+	}
+
+	@Override
+	@Transactional()
+	public void deleteCommentVotes(Long commentId) throws CommentNotFoundException {
+		Comment comment = commentrepo.findById(commentId)
+				.orElseThrow(() -> new CommentNotFoundException("Comment with id " + commentId + " doesnot exists"));
+		List<CommentVotes> votes = commentvotesrepo.findAllByComment(comment);
+		commentvotesrepo.deleteAll(votes);
+		
+	}
+	
+	
 }

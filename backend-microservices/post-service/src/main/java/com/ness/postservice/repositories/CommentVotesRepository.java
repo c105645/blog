@@ -1,5 +1,6 @@
 package com.ness.postservice.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,7 @@ public interface CommentVotesRepository extends JpaRepository<CommentVotes, Long
 
 	@Query("select v from CommentVotes v where v.comment= ?1 and v.createdBy=?2")
 	Optional<CommentVotes> findIfUserHasAlreadyVoted(Comment comment, String user);
+
+	@Query("select v from CommentVotes v where v.comment= ?1")
+	List<CommentVotes> findAllByComment(Comment comment);
 }

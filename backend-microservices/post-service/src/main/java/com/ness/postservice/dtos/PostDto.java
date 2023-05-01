@@ -11,11 +11,11 @@ public record PostDto(
 		String title,
 		@NotBlank(message="description cannot be blank")
 		String short_description,
+		String imageUrl,
 		PostDetailDto postDetails,
 		List<CommentDto> comments,
 		@NotBlank(message="category cannot be blank")
 		String category,
-		List<TagDto> tags,
 	    LocalDate createdAt,
 	    LocalDate updatedAt,
 	    String createdBy,

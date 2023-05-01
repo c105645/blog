@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -177,5 +178,27 @@ public class UserProfileServiceImpl implements UserProfileService{
 		catrepo.deleteById(id);	
     }
 
-
+	
+	@Override
+    @Transactional()
+    public void addTopic(Long topicId) throws CategoryNotFoundException, UserNotFoundException {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    	UserProfileEntity user = repository.findUserProfileByUsername(username).orElseThrow(() -> new UserNotFoundException("user not found"));
+    	Category category =  catrepo.findById(topicId).orElseThrow(() -> new CategoryNotFoundException("Category Not Found"));  	
+    	user.addCategory(category);
+        repository.save(user);
+    }
+	
+	@Override
+    @Transactional()
+    public void removeTopic(Long topicId) throws CategoryNotFoundException, UserNotFoundException {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    	UserProfileEntity user = repository.findUserProfileByUsername(username).orElseThrow(() -> new UserNotFoundException("user not found"));
+    	Category category =  catrepo.findById(topicId).orElseThrow(() -> new CategoryNotFoundException("Category Not Found"));  	
+    	user.removeCategory(category);
+        repository.save(user);
+    }
 }
+
+
+

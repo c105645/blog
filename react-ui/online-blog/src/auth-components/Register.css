@@ -1,0 +1,28 @@
+.form-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: space-evenly;
+}
+
+.form-element {
+    display: flex;
+    flex-direction: column;
+    margin: 0 35px 0 25px;
+}
+
+.already-registered {
+    margin-top: 20px;
+}
+
+.register-section {
+    width: 100%;
+    max-width: 720px;
+    min-height: 400px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    align-content: space-between;
+    padding: 1rem;
+    border: 1px solid black;
+}

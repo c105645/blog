@@ -49,6 +49,10 @@ public class UserProfileController {
 	  public static final String FOLLOWING = "/following";
 	  public static final String CATEGORIES = "/categoery";
 	  public static final String CATEGOERY = "/categoery/{id}";
+	  public static final String FOLLOWCATEGOERY = "/categoery/{id}/follow";
+	  public static final String UNFOLLOWCATEGOERY = "/categoery/{id}/unfollow";
+
+
 
 
 	  
@@ -251,5 +255,33 @@ public class UserProfileController {
 	 public void deleteCategoery(@PathVariable Long id) throws CategoryNotFoundException {
 	     service.deleteCategoery(id);     	
    }
+	 
+	 
+	 @ToLog
+	 @PostMapping(FOLLOWCATEGOERY)
+	 @ResponseStatus(HttpStatus.CREATED)
+	   @Operation(summary = "follow a Topic")
+	    @ApiResponses(value = {
+	            @ApiResponse(responseCode = "201", description = "Topic added to the user", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UserProfileDto.class))}),
+	            @ApiResponse(responseCode = "401", description = "Un-Authorized user", content = {@Content(schema = @Schema(hidden = true))}),
+	            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = {@Content(schema = @Schema(hidden = true))})
+	    })
+	 public void followTopic(@Valid @PathVariable Long id) throws CategoryNotFoundException, UserNotFoundException {
+	     service.addTopic(id);     	
+   }
+	 
+	 @ToLog
+	 @PostMapping(UNFOLLOWCATEGOERY)
+	 @ResponseStatus(HttpStatus.OK)
+	   @Operation(summary = "un follow a Topic")
+	    @ApiResponses(value = {
+	            @ApiResponse(responseCode = "200", description = "Topic removed from the user", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UserProfileDto.class))}),
+	            @ApiResponse(responseCode = "401", description = "Un-Authorized user", content = {@Content(schema = @Schema(hidden = true))}),
+	            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = {@Content(schema = @Schema(hidden = true))})
+	    })
+	 public void unFollowTopic(@Valid @PathVariable Long id) throws CategoryNotFoundException, UserNotFoundException {
+	     service.removeTopic(id);     	
+   }
+
 
 }

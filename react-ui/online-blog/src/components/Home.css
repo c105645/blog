@@ -1,0 +1,81 @@
+.container {
+    width: 1024px;
+    margin: 0 auto auto 20px;
+    min-height: 820px;
+    border-right: 1px solid grey;
+}
+
+.tabs {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    overflow-x: scroll;
+    padding: 20px 0;
+
+}
+
+.tabs button {
+    background-color: lightgray;
+    border: none;
+    color: #888888;
+    cursor: pointer;
+    padding: 25px;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: all 0.5s ease-out;
+}
+
+.tabs button:hover {
+    color: black;
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.tabs button:disabled {
+    background: linear-gradient(245.39deg, #FC65ED -35.14%, #0500FF 143.06%);
+    color: white;
+}
+
+.title {
+    color: black;
+    font-size: medium;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.content {
+    padding: 30px 20px;
+    background-color: white;
+    font-weight: 300;
+    line-height: 30px;
+    font-size: 16px;
+    text-align: justify;
+}
+
+.content,
+button {
+    font-size: 15px;
+}
+
+
+ .tabs::-webkit-scrollbar {
+    width: 10px;
+}
+
+.tabs::-webkit-scrollbar-button {
+    display: block;
+    background-repeat: no-repeat;   
+    background-size: 100%;
+    width: 17px;
+    height: 17px;
+}
+
+.tabs::-webkit-scrollbar-button:horizontal:start:increment {
+    background-image: url('../svg/circle-right-solid.svg');  
+
+}
+
+.tabs::-webkit-scrollbar-button:horizontal:end:decrement {
+    background-image: url('../svg/circle-left-solid.svg');   
+ 
+}

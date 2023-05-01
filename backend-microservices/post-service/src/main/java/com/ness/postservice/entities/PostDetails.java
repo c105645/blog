@@ -31,16 +31,6 @@ public class PostDetails extends Base {
 	@Column(name = "content", nullable = false)
 	private String content;
 	
-	private String imageUrl;
-
-	public String getImageUrl() {
-		return imageUrl;
-	}
-
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
-	}
-
 	public String getContent() {
 		return content;
 	}
@@ -81,7 +71,7 @@ public class PostDetails extends Base {
 
 	@Override
 	public String toString() {
-		return "PostDetails [content=" + content + ", imageUrl=" + imageUrl + ", id=" + id
+		return "PostDetails [content=" + content + ", id=" + id
 				+ ", createdBy =" + createdBy + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
 	}
 

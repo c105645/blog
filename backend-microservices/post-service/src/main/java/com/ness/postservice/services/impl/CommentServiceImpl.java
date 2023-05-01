@@ -20,6 +20,7 @@ import com.ness.postservice.mapstructs.CommentMapper;
 import com.ness.postservice.repositories.CommentRepository;
 import com.ness.postservice.repositories.PostRepository;
 import com.ness.postservice.services.CommentService;
+import com.ness.postservice.services.VotesService;
 
 import jakarta.transaction.Transactional;
 
@@ -28,13 +29,16 @@ public class CommentServiceImpl implements CommentService{
 
 	private final CommentRepository repo;
 	private final PostRepository postrepo;
+	private final VotesService votesservice;
+
 
 	private final CommentMapper mapper;
 
-	public CommentServiceImpl(CommentRepository repo, CommentMapper mapper, PostRepository postrepo) {
+	public CommentServiceImpl(CommentRepository repo, VotesService votesservice, CommentMapper mapper, PostRepository postrepo) {
 		this.repo = repo;
 		this.mapper = mapper;
 		this.postrepo=postrepo;
+		this.votesservice=votesservice;
 	}
 
 	@Override
@@ -69,6 +73,7 @@ public class CommentServiceImpl implements CommentService{
 	@Transactional()
 	public void delete(Long commentid) throws CommentNotFoundException {
 		repo.findById(commentid).orElseThrow(() -> new CommentNotFoundException("comment with id " + commentid + " doesnot exists"));
+		votesservice.deleteCommentVotes(commentid);
 		repo.deleteById(commentid);
 	}
 

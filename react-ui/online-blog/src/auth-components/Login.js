@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import useAuth from '../hooks/useAuth';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import './Login.css'
 
 import axios from '../api/axios';
 const LOGIN_URL = '/userprofile/auth/login';
@@ -44,6 +45,7 @@ const Login = () => {
             setPassword('');
             navigate(from, { replace: true });
         } catch (err) {
+            console.log(err)
             if (!err?.response) {
                 setErrMsg('No Server Response');
             } else if (err.response?.status === 400) {
@@ -59,11 +61,11 @@ const Login = () => {
 
     return (
 
-        <section>
+        <section className='login-section'>
             <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
-            <h1>Sign In</h1>
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="username">Username:</label>
+            <h4>Sign In</h4>
+            <form onSubmit={handleSubmit} className="login-form">
+                <label htmlFor="username" className="mt-2">Username:</label>
                 <input
                     type="text"
                     id="username"
@@ -74,7 +76,7 @@ const Login = () => {
                     required
                 />
 
-                <label htmlFor="password">Password:</label>
+                <label htmlFor="password" className="mt-2">Password:</label>
                 <input
                     type="password"
                     id="password"
@@ -82,7 +84,7 @@ const Login = () => {
                     value={password}
                     required
                 />
-                <button>Sign In</button>
+                <button className="mt-4">Sign In</button>
             </form>
             <p>
                 Need an Account?<br />
