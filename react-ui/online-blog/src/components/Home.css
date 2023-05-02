@@ -1,8 +1,21 @@
+.mainContainer {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+}
+
 .container {
-    width: 1024px;
-    margin: 0 auto auto 20px;
+    width: 60%;
     min-height: 820px;
-    border-right: 1px solid grey;
+    border-right: 1px solid rgb(0 0 0 / 18%);
+}
+
+.rightContainer {
+    display: flex;
+    width: 40%;
+    max-height: 1048px;
+    position: sticky;
+    justify-content: center;
 }
 
 .tabs {

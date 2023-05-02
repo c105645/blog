@@ -41,7 +41,10 @@ const Header = () => {
     (!auth?.user && (
       <>
         <div className="header-tile">
+        <div className="branddetail">  
         <img src={logo} className="App-logo" alt="logo" />
+        <span ><h3>teCh haCk</h3></span>
+        </div>
           {location.pathname == "/login" ? (
             <span className="link">
               <Link to="/register">Sign Up</Link>
