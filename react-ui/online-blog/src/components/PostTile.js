@@ -7,7 +7,7 @@ import './PostTile.css'
 
 const PostTile = (props) => {
     return (
-      <Card style={{ width: '100%', marginBottom: "25px", border: "none"}}>
+      <Card style={{ width: '100%', marginBottom: "15px", border: "none"}}>
         <CardBody>
           <CardTitle><span style={{paddingRight:'10px'}}><img style={{borderRadius: '50%'}} src={avatar} width="25px" height="25px"/></span>{props.post.createdBy} &nbsp; . &nbsp; {props.post.createdAt}</CardTitle>
           <div className="tileGridContainer">
@@ -24,11 +24,11 @@ const PostTile = (props) => {
             <div><FaThumbsDown /><Badge pill outline="true" color="light" className="text-dark">{props.post.downVoteCount}</Badge> </div>
             <div><FaComments /><Badge pill outline="true" color="light" className="text-dark">{props.post.commentCount}</Badge> </div>
             <div>{props.showReason}</div>
-
           </div>
+          <hr />
         </CardBody>
-
       </Card>
+
     );
 }
 export default PostTile;

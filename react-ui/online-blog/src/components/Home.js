@@ -64,7 +64,10 @@ const Home = () => {
           ))}
         </div>
       </div>
-      <div className="rightContainer">right container</div>
+      <div className="rightContainer">
+          
+
+      </div>
     </div>
   );
 };
