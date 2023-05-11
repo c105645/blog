@@ -6,3 +6,12 @@ align-items: baseline;
 margin: 10px 0;
 gap: 20px;
 }
+
+.tileGridContainer {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+
+}

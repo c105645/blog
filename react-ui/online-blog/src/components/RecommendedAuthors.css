@@ -1,0 +1,29 @@
+
+  
+.follow-content {
+    display: flex;
+    flex-flow: row nowrap;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px
+  }
+  
+  .follow-content > .info {
+    margin: 0px 10px;
+    font-size: 15px;
+    font-weight: 400;
+  }
+  
+  
+  .follow-content > .info > span {
+    font-size: 15px;
+  }
+  
+  .follow-content > button {
+    padding: 7px 15px;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.568);
+    border-radius: 33px;
+    cursor: pointer;
+  }

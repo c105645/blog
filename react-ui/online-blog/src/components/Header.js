@@ -10,10 +10,10 @@ import {
   NavbarBrand,
   NavItem,
 } from "reactstrap";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 import "./Header.css";
-import logo from '../svg/logo.svg';
+import logo from "../svg/logo.svg";
 
 import { Link, useLocation } from "react-router-dom";
 
@@ -27,24 +27,24 @@ const Header = () => {
   const handleLogOut = () => {
     console.log("handleLogOut");
     setAuth(null);
-    navigate('/login')
-  }
+    navigate("/login");
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
     setSearchInput(e.target.value);
   };
 
-
-
   return (
     (!auth?.user && (
       <>
         <div className="header-tile">
-        <div className="branddetail">  
-        <img src={logo} className="App-logo" alt="logo" />
-        <span ><h3>teCh haCk</h3></span>
-        </div>
+          <div className="branddetail">
+            <img src={logo} className="App-logo" alt="logo" />
+            <span>
+              <h3>teCh haCk</h3>
+            </span>
+          </div>
           {location.pathname == "/login" ? (
             <span className="link">
               <Link to="/register">Sign Up</Link>
@@ -59,16 +59,14 @@ const Header = () => {
     )) ||
     (auth?.user && (
       <>
-        <Navbar
-          expand="lg"
-          sticky="top"
-          className="header-tile"
-        >
+        <Navbar expand="lg" sticky="top" className="header-tile">
           <Nav className="ml-auto" navbar>
             <NavbarBrand>
-                <Link to="/">
-                  <span><img src={logo} className="App-logo" alt="logo" /></span>
-                </Link>
+              <Link to="/">
+                <span>
+                  <img src={logo} className="App-logo" alt="logo" />
+                </span>
+              </Link>
             </NavbarBrand>
             <NavItem>
               <InputGroup className="navbar-inputgroup">
@@ -81,8 +79,9 @@ const Header = () => {
                   placeholder="Search here..."
                   aria-label="search"
                   aria-describedby="search-box"
+                  className="searchInput"
                 />
-                <Button onClick={handleSearch} color="secondary">
+                <Button onClick={handleSearch} color="secondary" className="searchButton">
                   <FaSearch />
                 </Button>
               </InputGroup>
@@ -90,26 +89,38 @@ const Header = () => {
           </Nav>
           <Nav className="mr-auto" navbar>
             <NavItem className="mt-1">
-              <Button outline style={{"borderStyle": "none", "outline":"none"}}>
+              <Button outline style={{ borderStyle: "none", outline: "none" }}>
                 <FaEdit />
               </Button>
             </NavItem>
-            <NavItem style={{"marginTop": "14px"}}>
+            <NavItem style={{ marginTop: "14px" }}>
               <p>
                 <span>
-                &nbsp;&nbsp;<BsPersonCircle />
+                  &nbsp;&nbsp;
+                  <BsPersonCircle />
                 </span>
                 &nbsp;{auth.user.username}&nbsp;&nbsp;
               </p>
             </NavItem>
             <NavItem className="mt-1">
-             {auth?.user &&  (<Button outline style={{"borderStyle": "none", "outline":"none"}} onClick={handleLogOut}>
-                <FaSignOutAlt />
-              </Button>)}
+              {auth?.user && (
+                <Button
+                  outline
+                  style={{ borderStyle: "none", outline: "none" }}
+                  onClick={handleLogOut}
+                >
+                  <FaSignOutAlt />
+                </Button>
+              )}
 
-              {!auth?.user && (<Button outline style={{"borderStyle": "none", "outline":"none"}} >
-                <FaSignInAlt />
-              </Button>)}
+              {!auth?.user && (
+                <Button
+                  outline
+                  style={{ borderStyle: "none", outline: "none" }}
+                >
+                  <FaSignInAlt />
+                </Button>
+              )}
             </NavItem>
           </Nav>
         </Navbar>

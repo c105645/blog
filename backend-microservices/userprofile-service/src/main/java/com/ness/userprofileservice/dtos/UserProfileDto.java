@@ -27,6 +27,7 @@ public record UserProfileDto(
 		@Email(message = "Enter a valid email") 
 		String email,
 		boolean isAdmin, 
+		boolean isAuthor,
 		String biography, 
 		String imageUrl, 
 		List<CategoryDto> categories,

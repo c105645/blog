@@ -17,6 +17,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
 
 
@@ -39,6 +40,7 @@ public class UserProfileEntity extends Base{
 	@Email(message = "Enter a valid email")
 	private String email;
 	boolean isAdmin;
+	boolean isAuthor;
 	private String biography; 
 	private String imageUrl;
 	@ManyToMany(cascade = {CascadeType.ALL })
@@ -161,11 +163,19 @@ public class UserProfileEntity extends Base{
 	public void setisAdmin(boolean isAdmin) {
 		this.isAdmin = isAdmin;
 	}
+	
+	
+	public boolean getIsAuthor() {
+		return isAuthor;
+	}
+	public void setIsAuthor(boolean isAuthor) {
+		this.isAuthor = isAuthor;
+	}
 	@Override
 	public String toString() {
 		return "UserProfileEntity [username=" + username + ", firstName=" + firstName + ", lastName=" + lastName
 				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
-				+ ", password=" + password + ", email=" + email + ", isAdmin=" + isAdmin + ", biography=" + biography
+				+ ", password=" + password + ", email=" + email + ", isAdmin=" + isAdmin + ", isAuthor=" + isAuthor + ", biography=" + biography
 				+ ", imageUrl=" + imageUrl + ", categories=" + categories + ", followers=" + followers.stream().map(follower->follower.getId() + ", " + follower.getUsername()).collect(Collectors.toList()) + ", following="
 				+ following.stream().map(follower->follower.getId() + ", " + follower.getUsername()).collect(Collectors.toList()) + "]";
 	}

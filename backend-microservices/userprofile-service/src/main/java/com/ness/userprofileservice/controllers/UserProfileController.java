@@ -153,6 +153,19 @@ public class UserProfileController {
 	    return service.fetchByUsername(username);     	
     }
 	 
+	 @ToLog
+	 @GetMapping("")
+	 @ResponseStatus(HttpStatus.OK)
+	 @Operation(summary = "fetch a profile based on username")
+	    @ApiResponses(value = {
+	            @ApiResponse(responseCode = "200", description = "profile fetched", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UserProfileDto.class))}),
+	            @ApiResponse(responseCode = "404", description = "User profile does not exist", content = {@Content(schema = @Schema(hidden = true))}),
+	            @ApiResponse(responseCode = "401", description = "Un-Authorized user", content = {@Content(schema = @Schema(hidden = true))}),
+	            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = {@Content(schema = @Schema(hidden = true))})
+	    })	
+	 public List<UserProfileDto> fetchAllUsers() throws UserNotFoundException {
+	    return service.fetchUsers();     	
+    }
 	 
 	 @ToLog
 	 @PostMapping(FOLLOW)
@@ -210,6 +223,19 @@ public class UserProfileController {
 	    return service.getFollowing(Id);     	
     }
 	 
+	 @ToLog
+	 @GetMapping(CATEGORIES)
+	 @ResponseStatus(HttpStatus.CREATED)
+	   @Operation(summary = "fetch all categories")
+	    @ApiResponses(value = {
+	            @ApiResponse(responseCode = "200", description = "categories fetched", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UserProfileDto.class))}),
+	            @ApiResponse(responseCode = "404", description = "categories dont exists", content = {@Content(schema = @Schema(hidden = true))}),
+	            @ApiResponse(responseCode = "401", description = "Un-Authorized user", content = {@Content(schema = @Schema(hidden = true))}),
+	            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = {@Content(schema = @Schema(hidden = true))})
+	    })
+	 public List<CategoryDto> fetchCategories() {
+	    return service.fetchAllCategories();     	
+   }
 	 
 	 
 	 @ToLog

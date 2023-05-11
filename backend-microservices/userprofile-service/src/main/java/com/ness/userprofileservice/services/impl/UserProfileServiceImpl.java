@@ -198,6 +198,17 @@ public class UserProfileServiceImpl implements UserProfileService{
     	user.removeCategory(category);
         repository.save(user);
     }
+
+	@Override
+	public List<UserProfileDto> fetchUsers() {
+		return repository.findAll().stream().map(user -> usermapper.toDto(user)).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<CategoryDto> fetchAllCategories() {
+		return catrepo.findAll().stream().map(cat -> catmapper.toDto(cat)).collect(Collectors.toList());
+
+	}
 }
 
 

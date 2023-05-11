@@ -16,42 +16,41 @@ import jakarta.validation.Valid;
 @Service
 public interface UserProfileService {
 
-
-
 	UserProfileDto registerUser(UserProfileDto user) throws UserAlreadyExistsException;
-	
+
 	CategoryDto addNewCategoery(CategoryDto categoery) throws CategoryAlreadyExistsException;
+
 	CategoryDto updateCategoery(Long id, CategoryDto categoery) throws CategoryNotFoundException;
+
 	void deleteCategoery(Long id) throws CategoryNotFoundException;
 
+	UserProfileDto updateUser(Long userId, @Valid UserProfileDto user)
+			throws UserNotFoundException, OperationNotAllowedException;
 
+	void deleteUser(Long userId) throws UserNotFoundException;
 
+	UserProfileDto getUserById(Long userId) throws UserNotFoundException;
 
-	UserProfileDto updateUser(Long userId,@Valid UserProfileDto user) throws UserNotFoundException, OperationNotAllowedException;
+	boolean VerifyIfEmailAlreadyExists(String email);
 
-  void deleteUser(Long userId) throws UserNotFoundException;
+	boolean VerifyIfUsernameAlreadyExists(String username);
 
-  UserProfileDto getUserById(Long userId) throws UserNotFoundException;
+	UserProfileDto fetchByUsername(String username) throws UserNotFoundException;
 
-  boolean VerifyIfEmailAlreadyExists(String email);
-  
-  boolean VerifyIfUsernameAlreadyExists(String username);
+	List<UserProfileDto> getFollowing(Long userId) throws UserNotFoundException;
 
-  UserProfileDto fetchByUsername(String username) throws UserNotFoundException;
+	List<UserProfileDto> getFollowers(Long userId) throws UserNotFoundException;
 
-  List<UserProfileDto> getFollowing(Long userId) throws UserNotFoundException;
-	
-  List<UserProfileDto> getFollowers(Long userId) throws UserNotFoundException;
-	
-  void unfollow(Long userId, Long toUnFollowId) throws UserNotFoundException;
-	
-  void addFollower(Long userId, Long toFollowId) throws UserNotFoundException;
-  
-  void addTopic(Long topicId) throws CategoryNotFoundException, UserNotFoundException;
+	void unfollow(Long userId, Long toUnFollowId) throws UserNotFoundException;
 
-void removeTopic(Long topicId) throws CategoryNotFoundException, UserNotFoundException;
+	void addFollower(Long userId, Long toFollowId) throws UserNotFoundException;
+
+	void addTopic(Long topicId) throws CategoryNotFoundException, UserNotFoundException;
+
+	void removeTopic(Long topicId) throws CategoryNotFoundException, UserNotFoundException;
+
+	List<UserProfileDto> fetchUsers();
+
+	List<CategoryDto> fetchAllCategories();
 
 }
-
-
-	

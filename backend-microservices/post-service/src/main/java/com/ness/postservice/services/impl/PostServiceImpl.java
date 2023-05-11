@@ -11,6 +11,9 @@ import org.springframework.data.domain.Sort.TypedSort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.ness.postservice.dtos.ByAuthorRequest;
+import com.ness.postservice.dtos.CategoryRequest;
+import com.ness.postservice.dtos.FollowingRequest;
 import com.ness.postservice.dtos.PostDto;
 import com.ness.postservice.entities.Post;
 import com.ness.postservice.exceptions.PostNotFoundException;
@@ -128,6 +131,30 @@ public class PostServiceImpl implements PostService {
 
 		List<Post> posts = repo.findAll(postExample, pageable).getContent();
 		
+		return posts.stream().map(post -> postlistmapper.toDto(post)).collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional()
+	public List<PostDto> getPostsByCategory(CategoryRequest categoery, Pageable pageable) {
+
+		Pageable firstPage = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+		List<Post> posts = repo.findAllByCategory(categoery.categoery(), firstPage).getContent();
+		return posts.stream().map(post -> postlistmapper.toDto(post)).collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional()
+	public List<PostDto> getPostsByFollowing(FollowingRequest following, Pageable pageable) {
+		Pageable firstPage = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+		List<Post> posts = repo.findAllByFollowing(following.following(), firstPage).getContent();
+		return posts.stream().map(post -> postlistmapper.toDto(post)).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<PostDto> getPostsByAuthor(ByAuthorRequest author, Pageable pageable) {
+		Pageable firstPage = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+		List<Post> posts = repo.findAllByCreatedBy(author.author(), firstPage).getContent();
 		return posts.stream().map(post -> postlistmapper.toDto(post)).collect(Collectors.toList());
 	}
 

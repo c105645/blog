@@ -17,15 +17,6 @@ body {
     min-height: 100vh;
 } 
 
-.App {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh; 
-}
-
-
 
 section {
     width: 100%;
@@ -115,87 +106,3 @@ li {
     margin-bottom: 0.5rem;
 }
 
-.line {
-    display: inline-block;
-}
-
-.flexGrow {
-    flex-grow: 1;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-end;
-} 
-
-
-.flexLayout {
-    display: flex;
-    flex-direction: column;
-}
-
-.gridLayout {
-    margin: 20px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(20%, 1fr));
-    grid-gap: 20px;
-}
-
-.bodyStyle {
-    width: 100%;
-    height: 100%;
-    left: 0;
-    right: 0;
-    position: fixed;
-    z-index: 1;
-    display: block;
-    filter: opacity(50%);
-    background-size: cover; 
-    background-image: url('https://img.freepik.com/free-photo/person-writing-office_53876-94944.jpg?w=740&t=st=1682369667~exp=1682370267~hmac=862920bbeeed2ad3ed2370317546540c2ca42e83c0edc0d34f3d6de33ee0cb2f');
-}
-
-.contentStyle {
-    left: 0;
-    right: 0;
-    position: fixed;
-    z-index: 9999;
-    width: 40rem;
-    margin: auto; 
-    margin-top:5rem;
-    padding: 1rem 2rem 1rem 2rem;
-    box-shadow: rgba(0, 0, 0, 0.8) 0px 3px 8px;
-    border-radius: 10px;
-    background-color: white;
-}
-
-.centerStyle {
-    margin-left: 50%;
-    margin-top: 5rem;
-}
-
-.tileList {
-    margin-top: 2%;
-}
-
-.tile {
-    padding-top: 1%;
-}
-
-.tileGridContainer{
-    display: grid;
-    grid-template-columns: 20% 20% 20% 20%;
-    gap: 6%;
-    justify-content: center;
-    align-items: center;
-}
-
-.tileText {
-    grid-column: 1 / 4;
-    padding-right: 5%;
-}
-
-.tileImage {
-    grid-column: 4 / 5;
-}
-
-.link {
- align-self: center;
-}
