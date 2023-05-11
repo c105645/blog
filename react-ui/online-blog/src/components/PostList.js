@@ -8,15 +8,16 @@ const PostList = ({searchBy, searchString, title}) => {
   const [postArr, setPostArr] = useState([]);
   const [errMsg, setErrMsg] = useState("");
   const axiosPrivate = useAxiosPrivate();
-  const { setAuth } = useAuth();
+  const {auth,  setAuth } = useAuth();
 
   const POSTLISTURL = "/post";
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        const following = [...auth?.user?.following.map((username) => ({username}))];
         const response = await axiosPrivate.post(
-          POSTLISTURL + "/search?page=0&size=20", {"searchBy": searchBy, "searchString": searchString }
+          POSTLISTURL + "/search?page=0&size=20", {"searchBy": searchBy, "searchString": searchString, following }
         );
 
         setPostArr(response.data);
@@ -42,7 +43,7 @@ const PostList = ({searchBy, searchString, title}) => {
     <Alert color="danger">{errMsg}</Alert>
   ) : (
     <div className="tileList">
-      {postArr.map((post) => (
+      {postArr.length && postArr?.map((post) => (
         <div key={post.id} className="tile">
           <PostTile post={post} showReason={title} />
         </div>

@@ -89,7 +89,7 @@ const Home = () => {
               {currentTab === `${tab.id}` && (
                 <div>
                   <PostList
-                    searchBy={tab.tabTitle}
+                    searchBy={tab.tabTitle == "Following" ? "following" : "categoery"}
                     searchString={tab.tabTitle}
                     title={tab.title}
                   />

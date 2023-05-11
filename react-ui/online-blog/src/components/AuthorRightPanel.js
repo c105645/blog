@@ -51,7 +51,7 @@ const AuthorRightPanel = ({ author }) => {
             cursor: "pointer",
             width: "430px",
             color: "rgb(117, 117, 117)",
-            padding: "20px 20px 50px 20px",
+            padding: "20px 20px 50px 0px",
             borderBottom: "1px solid lightgrey",
           }}
         >
