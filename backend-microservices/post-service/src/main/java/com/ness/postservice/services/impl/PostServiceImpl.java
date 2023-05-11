@@ -11,16 +11,13 @@ import org.springframework.data.domain.Sort.TypedSort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.ness.postservice.dtos.ByAuthorRequest;
-import com.ness.postservice.dtos.CategoryRequest;
-import com.ness.postservice.dtos.FollowingRequest;
+
 import com.ness.postservice.dtos.PostDto;
 import com.ness.postservice.entities.Post;
 import com.ness.postservice.exceptions.PostNotFoundException;
 import com.ness.postservice.mapstructs.PostMapper;
 import com.ness.postservice.mapstructs.PostsListMapper;
 import com.ness.postservice.repositories.PostRepository;
-import com.ness.postservice.repositories.PostVotesRepository;
 import com.ness.postservice.services.PostService;
 import com.ness.postservice.services.VotesService;
 
@@ -136,25 +133,25 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	@Transactional()
-	public List<PostDto> getPostsByCategory(CategoryRequest categoery, Pageable pageable) {
+	public List<PostDto> getPostsByCategory(String categoery, Pageable pageable) {
 
 		Pageable firstPage = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
-		List<Post> posts = repo.findAllByCategory(categoery.categoery(), firstPage).getContent();
+		List<Post> posts = repo.findAllByCategory(categoery, firstPage).getContent();
 		return posts.stream().map(post -> postlistmapper.toDto(post)).collect(Collectors.toList());
 	}
 
 	@Override
 	@Transactional()
-	public List<PostDto> getPostsByFollowing(FollowingRequest following, Pageable pageable) {
+	public List<PostDto> getPostsByFollowing(List<String> following, Pageable pageable) {
 		Pageable firstPage = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
-		List<Post> posts = repo.findAllByFollowing(following.following(), firstPage).getContent();
+		List<Post> posts = repo.findAllByFollowing(following, firstPage).getContent();
 		return posts.stream().map(post -> postlistmapper.toDto(post)).collect(Collectors.toList());
 	}
 
 	@Override
-	public List<PostDto> getPostsByAuthor(ByAuthorRequest author, Pageable pageable) {
+	public List<PostDto> getPostsByAuthor(String author, Pageable pageable) {
 		Pageable firstPage = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
-		List<Post> posts = repo.findAllByCreatedBy(author.author(), firstPage).getContent();
+		List<Post> posts = repo.findAllByCreatedBy(author, firstPage).getContent();
 		return posts.stream().map(post -> postlistmapper.toDto(post)).collect(Collectors.toList());
 	}
 

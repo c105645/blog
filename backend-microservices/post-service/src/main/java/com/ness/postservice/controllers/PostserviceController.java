@@ -1,6 +1,5 @@
 package com.ness.postservice.controllers;
 
-
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
@@ -19,9 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ness.postservice.aspects.ToLog;
 import com.ness.postservice.dtos.PostDto;
-import com.ness.postservice.dtos.ByAuthorRequest;
-import com.ness.postservice.dtos.CategoryRequest;
-import com.ness.postservice.dtos.FollowingRequest;
+import com.ness.postservice.dtos.SearchByCriteria;
 import com.ness.postservice.exceptions.PostAlreadyExistsException;
 import com.ness.postservice.exceptions.PostNotFoundException;
 import com.ness.postservice.services.PostService;
@@ -38,11 +35,10 @@ import jakarta.validation.Valid;
 public class PostserviceController {
 
 	public static final String POST_API_ENDPOINT = "/api/v1/post";
-	
+
 	public static final String COMMENT = "/comment";
 
 	private final PostService service;
-
 
 	public PostserviceController(PostService service) {
 		this.service = service;
@@ -52,8 +48,9 @@ public class PostserviceController {
 	@PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
 	@Operation(summary = "Create a new post")
-	@ApiResponses(value = { @ApiResponse(responseCode = "201", description = "post created", content = {
-			@Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class)) }),
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "201", description = "post created", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class)) }),
 			@ApiResponse(responseCode = "409", description = "Post already exists", content = {
 					@Content(schema = @Schema(hidden = true)) }),
 			@ApiResponse(responseCode = "401", description = "Un-Authorized user", content = {
@@ -63,13 +60,14 @@ public class PostserviceController {
 	public PostDto createANewPost(@Valid @RequestBody PostDto post) throws PostAlreadyExistsException {
 		return service.create(post);
 	}
-	
+
 	@ToLog
 	@PutMapping()
 	@ResponseStatus(HttpStatus.ACCEPTED)
 	@Operation(summary = "update a new post")
-	@ApiResponses(value = { @ApiResponse(responseCode = "201", description = "post created", content = {
-			@Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class)) }),
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "201", description = "post created", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class)) }),
 			@ApiResponse(responseCode = "404", description = "Post doesnot exists", content = {
 					@Content(schema = @Schema(hidden = true)) }),
 			@ApiResponse(responseCode = "401", description = "Un-Authorized user", content = {
@@ -79,14 +77,14 @@ public class PostserviceController {
 	public PostDto modifyPost(@Valid @RequestBody PostDto post) throws PostNotFoundException {
 		return service.update(post);
 	}
-	
-	
+
 	@ToLog
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Create a new post")
-	@ApiResponses(value = { @ApiResponse(responseCode = "201", description = "post created", content = {
-			@Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class)) }),
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "201", description = "post created", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class)) }),
 			@ApiResponse(responseCode = "404", description = "Post doesnot exists", content = {
 					@Content(schema = @Schema(hidden = true)) }),
 			@ApiResponse(responseCode = "401", description = "Un-Authorized user", content = {
@@ -94,16 +92,16 @@ public class PostserviceController {
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = {
 					@Content(schema = @Schema(hidden = true)) }) })
 	public void deletePost(@Valid @PathVariable Long id) throws PostNotFoundException {
-		 service.delete(id);
+		service.delete(id);
 	}
-	
-	
+
 	@ToLog
 	@GetMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "fetch post details")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "fetch post details", content = {
-			@Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class)) }),
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "fetch post details", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class)) }),
 			@ApiResponse(responseCode = "404", description = "Post doesnot exist", content = {
 					@Content(schema = @Schema(hidden = true)) }),
 			@ApiResponse(responseCode = "401", description = "Un-Authorized user", content = {
@@ -113,24 +111,23 @@ public class PostserviceController {
 	public PostDto fetchPostById(@PathVariable Long id) throws PostNotFoundException {
 		return service.getPostById(id);
 	}
-	
+
 	@ToLog
 	@GetMapping()
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "fetch post details")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "fetch post details", content = {
-			@Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class)) }),
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "fetch post details", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class)) }),
 			@ApiResponse(responseCode = "409", description = "Post already exists", content = {
 					@Content(schema = @Schema(hidden = true)) }),
 			@ApiResponse(responseCode = "401", description = "Un-Authorized user", content = {
 					@Content(schema = @Schema(hidden = true)) }),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = {
 					@Content(schema = @Schema(hidden = true)) }) })
-	public List<PostDto> fetchPosts(
-				@RequestParam(name = "page", required = true, defaultValue = "0") int page,
-		        @RequestParam(name = "size", required = true, defaultValue = "2") int size
-			){
-		 Pageable pageable = PageRequest.of(page, size);
+	public List<PostDto> fetchPosts(@RequestParam(name = "page", required = true, defaultValue = "0") int page,
+			@RequestParam(name = "size", required = true, defaultValue = "2") int size) {
+		Pageable pageable = PageRequest.of(page, size);
 		return service.getPostListByPage(pageable);
 	}
 
@@ -138,19 +135,18 @@ public class PostserviceController {
 	@GetMapping("/mostvoted")
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "fetch most voted posts")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "fetch post details", content = {
-			@Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class)) }),
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "fetch post details", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class)) }),
 			@ApiResponse(responseCode = "409", description = "Post already exists", content = {
 					@Content(schema = @Schema(hidden = true)) }),
 			@ApiResponse(responseCode = "401", description = "Un-Authorized user", content = {
 					@Content(schema = @Schema(hidden = true)) }),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = {
 					@Content(schema = @Schema(hidden = true)) }) })
-	public List<PostDto> fetchMostVotedPosts(
-				@RequestParam(name = "page", required = true, defaultValue = "0") int page,
-		        @RequestParam(name = "size", required = true, defaultValue = "2") int size
-			){
-		 Pageable pageable = PageRequest.of(page, size);
+	public List<PostDto> fetchMostVotedPosts(@RequestParam(name = "page", required = true, defaultValue = "0") int page,
+			@RequestParam(name = "size", required = true, defaultValue = "2") int size) {
+		Pageable pageable = PageRequest.of(page, size);
 		return service.getMostVotedPosts(pageable);
 	}
 
@@ -158,8 +154,9 @@ public class PostserviceController {
 	@GetMapping("/mostcommented")
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "fetch most commented posts")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "fetch post details", content = {
-			@Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class)) }),
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "fetch post details", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class)) }),
 			@ApiResponse(responseCode = "409", description = "Post already exists", content = {
 					@Content(schema = @Schema(hidden = true)) }),
 			@ApiResponse(responseCode = "401", description = "Un-Authorized user", content = {
@@ -167,20 +164,19 @@ public class PostserviceController {
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = {
 					@Content(schema = @Schema(hidden = true)) }) })
 	public List<PostDto> fetchMostCommentedPosts(
-				@RequestParam(name = "page", required = true, defaultValue = "0") int page,
-		        @RequestParam(name = "size", required = true, defaultValue = "2") int size
-			){
-		 Pageable pageable = PageRequest.of(page, size);
+			@RequestParam(name = "page", required = true, defaultValue = "0") int page,
+			@RequestParam(name = "size", required = true, defaultValue = "2") int size) {
+		Pageable pageable = PageRequest.of(page, size);
 		return service.getMostCommentedPosts(pageable);
 	}
-	
 
 	@ToLog
 	@GetMapping("/byuser")
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "fetch posts created by current user")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "fetch post details", content = {
-			@Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class)) }),
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "fetch post details", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class)) }),
 			@ApiResponse(responseCode = "409", description = "Post already exists", content = {
 					@Content(schema = @Schema(hidden = true)) }),
 			@ApiResponse(responseCode = "401", description = "Un-Authorized user", content = {
@@ -189,112 +185,76 @@ public class PostserviceController {
 					@Content(schema = @Schema(hidden = true)) }) })
 	public List<PostDto> fetchPostsPageByCurrentUser(
 			@RequestParam(name = "page", required = true, defaultValue = "0") int page,
-	        @RequestParam(name = "size", required = true, defaultValue = "2") int size){
-		 Pageable pageable = PageRequest.of(page, size);
+			@RequestParam(name = "size", required = true, defaultValue = "2") int size) {
+		Pageable pageable = PageRequest.of(page, size);
 		return service.getPostsCreatedByCurrentUser(pageable);
 	}
-	
+
 	@ToLog
 	@GetMapping("/mostcommented/{category}")
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "fetch most commented posts by category")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "fetch post details", content = {
-			@Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class)) }),
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "fetch post details", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class)) }),
 			@ApiResponse(responseCode = "409", description = "Post already exists", content = {
 					@Content(schema = @Schema(hidden = true)) }),
 			@ApiResponse(responseCode = "401", description = "Un-Authorized user", content = {
 					@Content(schema = @Schema(hidden = true)) }),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = {
 					@Content(schema = @Schema(hidden = true)) }) })
-	public List<PostDto> fetchMostCommentedPostsByCategory(
-				@PathVariable String category,
-				@RequestParam(name = "page", required = true, defaultValue = "0") int page,
-		        @RequestParam(name = "size", required = true, defaultValue = "2") int size
-			){
-		 Pageable pageable = PageRequest.of(page, size);
+	public List<PostDto> fetchMostCommentedPostsByCategory(@PathVariable String category,
+			@RequestParam(name = "page", required = true, defaultValue = "0") int page,
+			@RequestParam(name = "size", required = true, defaultValue = "2") int size) {
+		Pageable pageable = PageRequest.of(page, size);
 		return service.getMostCommentedPostsByCategory(category, pageable);
 	}
-	
-	
-	
+
 	@ToLog
 	@GetMapping("/mostvoted/{category}")
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "fetch most voted posts by category")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "fetch post details", content = {
-			@Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class)) }),
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "fetch post details", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class)) }),
 			@ApiResponse(responseCode = "404", description = "Post doesnot exists", content = {
 					@Content(schema = @Schema(hidden = true)) }),
 			@ApiResponse(responseCode = "401", description = "Un-Authorized user", content = {
 					@Content(schema = @Schema(hidden = true)) }),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = {
 					@Content(schema = @Schema(hidden = true)) }) })
-	public List<PostDto> fetchMostVotedPostsByCategory(
-				@PathVariable String category,
-				@RequestParam(name = "page", required = true, defaultValue = "0") int page,
-		        @RequestParam(name = "size", required = true, defaultValue = "2") int size
-			){
-		 Pageable pageable = PageRequest.of(page, size);
+	public List<PostDto> fetchMostVotedPostsByCategory(@PathVariable String category,
+			@RequestParam(name = "page", required = true, defaultValue = "0") int page,
+			@RequestParam(name = "size", required = true, defaultValue = "2") int size) {
+		Pageable pageable = PageRequest.of(page, size);
 		return service.getMostVotedPostsByCategory(category, pageable);
 	}
 
+
+
 	@ToLog
-	@PostMapping("/byfollowing")
+	@PostMapping("/search")
 	@ResponseStatus(HttpStatus.OK)
-	@Operation(summary = "fetch posts by following")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "fetch post details", content = {
-			@Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class)) }),
+	@Operation(summary = "fetch posts by search criteria")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "fetch post details", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class)) }),
 			@ApiResponse(responseCode = "404", description = "Post doesnot exists", content = {
 					@Content(schema = @Schema(hidden = true)) }),
 			@ApiResponse(responseCode = "401", description = "Un-Authorized user", content = {
 					@Content(schema = @Schema(hidden = true)) }),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = {
 					@Content(schema = @Schema(hidden = true)) }) })
-	public List<PostDto> fetchPostsByFollowing(@RequestBody FollowingRequest following,
-				@RequestParam(name = "page", required = true, defaultValue = "0") int page,
-		        @RequestParam(name = "size", required = true, defaultValue = "2") int size
-			){
-		 Pageable pageable = PageRequest.of(page, size);
-		return service.getPostsByFollowing(following, pageable);
-	}
-	
-	@ToLog
-	@PostMapping("/bycategoery")
-	@ResponseStatus(HttpStatus.OK)
-	@Operation(summary = "fetch posts by category")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "fetch post details", content = {
-			@Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class)) }),
-			@ApiResponse(responseCode = "404", description = "Post doesnot exists", content = {
-					@Content(schema = @Schema(hidden = true)) }),
-			@ApiResponse(responseCode = "401", description = "Un-Authorized user", content = {
-					@Content(schema = @Schema(hidden = true)) }),
-			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = {
-					@Content(schema = @Schema(hidden = true)) }) })
-	public List<PostDto> fetchPostsByCategory(@RequestBody CategoryRequest categoery,
-				@RequestParam(name = "page", required = true, defaultValue = "0") int page,
-		        @RequestParam(name = "size", required = true, defaultValue = "2") int size
-			){
-		 Pageable pageable = PageRequest.of(page, size);
-		return service.getPostsByCategory(categoery, pageable);
-	}
-	
-	@ToLog
-	@PostMapping("/byauthor")
-	@ResponseStatus(HttpStatus.OK)
-	@Operation(summary = "fetch posts by author")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "fetch post details", content = {
-			@Content(mediaType = "application/json", schema = @Schema(implementation = PostDto.class)) }),
-			@ApiResponse(responseCode = "404", description = "Post doesnot exists", content = {
-					@Content(schema = @Schema(hidden = true)) }),
-			@ApiResponse(responseCode = "401", description = "Un-Authorized user", content = {
-					@Content(schema = @Schema(hidden = true)) }),
-			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = {
-					@Content(schema = @Schema(hidden = true)) }) })
-	public List<PostDto> fetchPostsByAuthor(@RequestBody ByAuthorRequest author,
-				@RequestParam(name = "page", required = true, defaultValue = "0") int page,
-		        @RequestParam(name = "size", required = true, defaultValue = "2") int size
-			){
-		 Pageable pageable = PageRequest.of(page, size);
-		return service.getPostsByAuthor(author, pageable);
+	public List<PostDto> fetchPostsBySearchCriteria(@RequestBody SearchByCriteria req,
+			@RequestParam(name = "page", required = true, defaultValue = "0") int page,
+			@RequestParam(name = "size", required = true, defaultValue = "2") int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		if (req.searchBy().equals("author")) {
+			return service.getPostsByAuthor(req.searchString(), pageable);
+		} else if (req.searchBy().equals("categoery")) {
+			return service.getPostsByCategory(req.searchString(), pageable);
+		} else if (req.searchBy().equals("following")) {
+			return service.getPostsByFollowing(req.following(), pageable);
+		}else return null;
 	}
 }

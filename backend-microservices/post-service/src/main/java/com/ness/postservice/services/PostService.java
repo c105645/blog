@@ -3,10 +3,6 @@ package com.ness.postservice.services;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
-
-import com.ness.postservice.dtos.ByAuthorRequest;
-import com.ness.postservice.dtos.CategoryRequest;
-import com.ness.postservice.dtos.FollowingRequest;
 import com.ness.postservice.dtos.PostDto;
 import com.ness.postservice.exceptions.PostNotFoundException;
 
@@ -32,9 +28,9 @@ public interface PostService {
 
 	void delete(Long id) throws PostNotFoundException;
 
-	List<PostDto> getPostsByCategory(CategoryRequest categoery, Pageable pageable);
+	List<PostDto> getPostsByCategory(String categoery, Pageable pageable);
 
-	List<PostDto> getPostsByFollowing(FollowingRequest following, Pageable pageable);
+	List<PostDto> getPostsByFollowing(List<String> following, Pageable pageable);
 
-	List<PostDto> getPostsByAuthor(ByAuthorRequest author, Pageable pageable);
+	List<PostDto> getPostsByAuthor(String author, Pageable pageable);
 }
