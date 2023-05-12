@@ -4,7 +4,7 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { Alert } from "reactstrap";
 import useAuth from "../hooks/useAuth";
 
-const PostList = ({searchBy, searchString, title}) => {
+const PostList = ({searchBy, searchString, title, authors}) => {
   const [postArr, setPostArr] = useState([]);
   const [errMsg, setErrMsg] = useState("");
   const axiosPrivate = useAxiosPrivate();
@@ -12,12 +12,13 @@ const PostList = ({searchBy, searchString, title}) => {
 
   const POSTLISTURL = "/post";
 
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const following = [...auth?.user?.following.map((username) => ({username}))];
+        const following = [...auth?.user?.following.map(usr => usr.username)];
         const response = await axiosPrivate.post(
-          POSTLISTURL + "/search?page=0&size=20", {"searchBy": searchBy, "searchString": searchString, following }
+          POSTLISTURL + "/search?page=0&size=20", {"searchBy": searchBy, "searchString": searchString, following, authors }
         );
 
         setPostArr(response.data);
@@ -43,11 +44,11 @@ const PostList = ({searchBy, searchString, title}) => {
     <Alert color="danger">{errMsg}</Alert>
   ) : (
     <div className="tileList">
-      {postArr.length && postArr?.map((post) => (
+      {postArr.length ? postArr?.map((post) => (
         <div key={post.id} className="tile">
           <PostTile post={post} showReason={title} />
         </div>
-      ))}
+      )): null}
     </div>
   );
 };

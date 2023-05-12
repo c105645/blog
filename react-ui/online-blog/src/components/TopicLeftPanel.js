@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 
 
-const AuthorLeftPanel = ({ author, followEvt }) => {
+const TopicLeftPanel = ({ topic, followEvt }) => {
   const { auth } = useAuth();
 
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ const AuthorLeftPanel = ({ author, followEvt }) => {
               marginTop: "10px",
             }}
           >
-            {author.firstName + " " + author.lastName}
+            {topic.name }
           </h1>
         </span>
         <span>
@@ -37,7 +37,8 @@ const AuthorLeftPanel = ({ author, followEvt }) => {
 
             }}
             onClick={followEvt}
-          >{auth?.user?.following.some(usr => usr.id == author.id) ? "Following" : "Follow"}
+
+          >{auth?.user?.categories.some(cat => cat.id == topic.id) ? "Following" : "Follow"}
           </button>
         </span>
       </div>
@@ -48,8 +49,8 @@ const AuthorLeftPanel = ({ author, followEvt }) => {
       </div>
       <div>
         <PostList
-          searchBy={"author"}
-          searchString={author.username}
+          searchBy={"categoery"}
+          searchString={topic.name}
           title={""}
         />
       </div>
@@ -57,4 +58,4 @@ const AuthorLeftPanel = ({ author, followEvt }) => {
   );
 };
 
-export default AuthorLeftPanel;
+export default TopicLeftPanel;

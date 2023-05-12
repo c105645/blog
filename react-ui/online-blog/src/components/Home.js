@@ -10,11 +10,13 @@ import "./Home.css";
 
 const Home = () => {
   const AUTHORS_URL = "/userprofile";
+  const FOLLOWINGLISTURL = "/userprofile/authors/following"
+
   const axiosPrivate = useAxiosPrivate();
   const { auth, setAuth } = useAuth();
-  const [authors, setAuthors] = useState();
+  const [authors, setAuthors] = useState([]);
   const [errMsg, setErrMsg] = useState("");
-  const [currentTab, setCurrentTab] = useState("1");
+  const [currentTab, setCurrentTab] = useState("ForYou");
   const tabs = [
     {
       id: "ForYou",
@@ -39,12 +41,11 @@ const Home = () => {
   useEffect(() => {
     const fetchAuthors = async () => {
       try {
-        const response = await axiosPrivate.get(
-          AUTHORS_URL + "?page=0&size=20",
+        const authorrs = auth.user.following.map((user) => (user.username));
+        const response = await axiosPrivate.post(
+          FOLLOWINGLISTURL + "?page=0&size=20", authorrs
         );
-
-        setAuthors(response.data.filter(author=> !auth.user.following[author] ));
-        console.log(authors);
+        setAuthors(response.data.filter(author=> !auth.user.following[author] && auth.user.username !== author.username));
       } catch (err) {
         if (!err?.response) {
           setErrMsg("No Server Response");
@@ -89,9 +90,10 @@ const Home = () => {
               {currentTab === `${tab.id}` && (
                 <div>
                   <PostList
-                    searchBy={tab.tabTitle == "Following" ? "following" : "categoery"}
+                    searchBy={tab.tabTitle == "Following" ?  "following" : tab.tabTitle == "For You"? "foryou" :  "categoery" || "foryou"}
                     searchString={tab.tabTitle}
                     title={tab.title}
+                    authors={authors?.map(author => author.username)}
                   />
                 </div>
               )}

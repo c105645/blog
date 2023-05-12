@@ -15,3 +15,12 @@ gap: 20px;
     gap: 20px;
 
 }
+
+.tileText {
+    padding: 30px 20px;
+    background-color: white;
+    font-weight: 300;
+    line-height: 30px;
+    font-size: 16px;
+    text-align: justify;
+}

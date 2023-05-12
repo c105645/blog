@@ -3,10 +3,11 @@ import "./AuthorRightPanel.css";
 import RecommandedAuthors from "./RecommendedAuthors";
 import useAuth from "../hooks/useAuth";
 
-const AuthorRightPanel = ({ author }) => {
-  const { auth } = useAuth();
+const AuthorRightPanel = ({ author, followEvt }) => {
 
-  if (!author) author = auth.user;
+
+
+  const { auth } = useAuth();
 
   return (
     <div className="rightbar">
@@ -29,7 +30,7 @@ const AuthorRightPanel = ({ author }) => {
           {author.firstName + " " + author.lastName}
         </h2>
         <p style={{ color: "rgb(117, 117, 117)", fontSize: "15px" }}>
-          {author.followers?.length || 0 + "  followers"}{" "}
+          {author.followers?.length + "  followers"}
         </p>
         <span>
           <button
@@ -40,7 +41,9 @@ const AuthorRightPanel = ({ author }) => {
               color:"white"
 
             }}
-          >{auth?.user?.following.some(usr => usr.id == author.id) ? "Following" : "Follow"}
+            onClick={followEvt}
+          >
+            {auth?.user?.following.some(usr => usr.id == author.id) ? "Following" : "Follow"}
           </button>
         </span>
         <div
