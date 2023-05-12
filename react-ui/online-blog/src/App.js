@@ -6,6 +6,7 @@ import AuthorAndTopicHome from './components/AuthorAndTopicHome';
 import Layout from './auth-components/Layout';
 import Login from './auth-components/Login';
 import { Routes, Route } from 'react-router-dom';
+import SearchComponent  from './components/SearchComponent';
 
 
 
@@ -18,7 +19,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* we want to protect these routes */}
+        we want to protect these routes
         <Route element={<RequireAuth allowedRoles={["User"]} />}>
           <Route path="/" element={<Home />} />
         </Route>
@@ -29,6 +30,10 @@ function App() {
 
         <Route element={<RequireAuth allowedRoles={["User"]} />}>
           <Route path="/topic" element={<AuthorAndTopicHome />} />
+        </Route>
+
+        <Route element={<RequireAuth allowedRoles={["User"]} />}>
+          <Route path="/search" element={<SearchComponent />} />
         </Route>
 
         {/* catch all */}
