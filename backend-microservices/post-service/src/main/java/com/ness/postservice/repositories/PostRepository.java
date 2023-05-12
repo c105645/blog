@@ -23,5 +23,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
 	@Query("select p from Post p where p.createdBy = ?1")
 	Slice<Post> findAllByCreatedBy(String author, Pageable firstPage);
+	
+	@Query("select p from Post p where p.title LIKE %:searchString%")
+	Slice<Post> findAllBySearchString(String searchString, Pageable firstPage);
 
 }

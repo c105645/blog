@@ -33,4 +33,6 @@ public interface PostService {
 	List<PostDto> getPostsByFollowing(List<String> following, Pageable pageable);
 
 	List<PostDto> getPostsByAuthor(String author, Pageable pageable);
+
+	List<PostDto> getPostsBySearchString(String searchString, Pageable pageable);
 }

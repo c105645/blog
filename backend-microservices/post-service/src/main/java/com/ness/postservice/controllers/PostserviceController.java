@@ -258,6 +258,9 @@ public class PostserviceController {
 		} else if (req.searchBy().equals("foryou")) {
 			return service.getPostsByFollowing(req.following(), pageable);
 		}
+		else if (req.searchBy().equals("searchstring")) {
+			return service.getPostsBySearchString(req.searchString(), pageable);
+		}
 		else return null;
 	}
 	

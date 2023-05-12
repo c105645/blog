@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -149,9 +150,34 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
+	@Transactional()
 	public List<PostDto> getPostsByAuthor(String author, Pageable pageable) {
 		Pageable firstPage = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
 		List<Post> posts = repo.findAllByCreatedBy(author, firstPage).getContent();
+		return posts.stream().map(post -> postlistmapper.toDto(post)).collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional()
+	public List<PostDto> getPostsBySearchString(String searchString, Pageable pageable) {
+		String user = SecurityContextHolder.getContext().getAuthentication().getName();
+		Post  postProbe = new Post();
+		postProbe.setTitle(searchString);
+		postProbe.setShort_description(searchString);
+		postProbe.setCategory(searchString);
+		postProbe.setCreatedBy(searchString);
+
+		ExampleMatcher customMatcher = ExampleMatcher.matching()
+			    .withMatcher("title", match -> match.contains().ignoreCase())
+			    .withMatcher("short_description", match -> match.contains().ignoreCase())
+			    .withMatcher("category", match -> match.contains().ignoreCase())
+			    .withMatcher("createdBy", match -> match.contains().ignoreCase());
+
+		
+		Example<Post> postExample = Example.of(postProbe, customMatcher);
+
+		List<Post> posts = repo.findAll(postExample, pageable).getContent();
+		
 		return posts.stream().map(post -> postlistmapper.toDto(post)).collect(Collectors.toList());
 	}
 
