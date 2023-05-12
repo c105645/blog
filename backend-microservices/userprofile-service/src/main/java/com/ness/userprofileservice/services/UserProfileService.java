@@ -2,6 +2,7 @@ package com.ness.userprofileservice.services;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ness.userprofileservice.dtos.CategoryDto;
@@ -52,5 +53,7 @@ public interface UserProfileService {
 	List<UserProfileDto> fetchUsers();
 
 	List<CategoryDto> fetchAllCategories();
+
+	List<UserProfileDto> getAuthorsFollowedBy(List<String> req, Pageable pageable);
 
 }

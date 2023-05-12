@@ -1,7 +1,10 @@
 package com.ness.userprofileservice.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -19,6 +22,10 @@ public interface UserProfileRepository extends JpaRepository<UserProfileEntity, 
 
 	@Query("select u from UserProfileEntity u where u.username=?1 or u.email=?2")
     public Optional<UserProfileEntity> findUserProfileByUserNameOrEmail(String username, String email);
+
+
+	@Query("select u from UserProfileEntity u where u.username in ?1")
+	public Page<UserProfileEntity> findAllByUsername(List<String> users, Pageable firstPage);
 
 
 

@@ -106,7 +106,7 @@ public class CommentServiceController {
 					@Content(schema = @Schema(hidden = true)) }) })
 	public List<CommentDto> fetchPosts(@PathVariable Long postid,
 				@RequestParam(name = "page", required = true, defaultValue = "0") int page,
-		        @RequestParam(name = "size", required = true, defaultValue = "2") int size
+		        @RequestParam(name = "size", required = true, defaultValue = "25") int size
 			) throws PostNotFoundException{
 		 Pageable pageable = PageRequest.of(page, size);
 		return service.getCommentListOfPostByPage(postid, pageable);
@@ -145,7 +145,7 @@ public class CommentServiceController {
 					@Content(schema = @Schema(hidden = true)) }) })
 	public List<CommentDto> fetchmostvotedPosts(@PathVariable Long postid,
 				@RequestParam(name = "page", required = true, defaultValue = "0") int page,
-		        @RequestParam(name = "size", required = true, defaultValue = "2") int size
+		        @RequestParam(name = "size", required = true, defaultValue = "25") int size
 			) throws PostNotFoundException{
 		 Pageable pageable = PageRequest.of(page, size);
 		return service.getMostVotedCommentsOfaPost(postid, pageable);

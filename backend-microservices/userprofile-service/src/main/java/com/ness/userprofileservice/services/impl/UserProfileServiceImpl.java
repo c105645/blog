@@ -1,9 +1,11 @@
 package com.ness.userprofileservice.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -208,6 +210,25 @@ public class UserProfileServiceImpl implements UserProfileService{
 	public List<CategoryDto> fetchAllCategories() {
 		return catrepo.findAll().stream().map(cat -> catmapper.toDto(cat)).collect(Collectors.toList());
 
+	}
+
+	@Override
+	public List<UserProfileDto> getAuthorsFollowedBy(List<String> req, Pageable pageable) {
+		List<UserProfileEntity> users = repository.findAllByUsername(req, pageable).getContent();
+		
+		List<String> followingList = new ArrayList<>();
+		List<UserProfileDto> usersList = new ArrayList<>();
+		
+		users.stream().forEach(user -> {
+			user.getFollowing().stream().forEach(following -> {
+				if(followingList.indexOf(following.getUsername()) == -1) {
+					followingList.add(following.getUsername());
+					usersList.add(usermapper.toDto(following));
+				}
+			});
+		});
+		
+		return usersList;
 	}
 }
 

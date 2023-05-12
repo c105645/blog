@@ -7,10 +7,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 import com.ness.userprofileservice.aspects.ToLog;
@@ -308,6 +312,27 @@ public class UserProfileController {
 	 public void unFollowTopic(@Valid @PathVariable Long id) throws CategoryNotFoundException, UserNotFoundException {
 	     service.removeTopic(id);     	
    }
+	 
+	 
+		@ToLog
+		@PostMapping("/authors/following")
+		@ResponseStatus(HttpStatus.OK)
+		@Operation(summary = "fetch following list of a list of authors")
+		@ApiResponses(value = {
+				@ApiResponse(responseCode = "200", description = "fetch authors List of following of following list", content = {
+						@Content(mediaType = "application/json", schema = @Schema(implementation = String.class)) }),
+				@ApiResponse(responseCode = "404", description = "authors doesnot exists", content = {
+						@Content(schema = @Schema(hidden = true)) }),
+				@ApiResponse(responseCode = "401", description = "Un-Authorized user", content = {
+						@Content(schema = @Schema(hidden = true)) }),
+				@ApiResponse(responseCode = "500", description = "Internal Server Error", content = {
+						@Content(schema = @Schema(hidden = true)) }) })
+		public List<UserProfileDto> fetchAuthorsList(@RequestBody List<String> req,
+				@RequestParam(name = "page", required = true, defaultValue = "0") int page,
+				@RequestParam(name = "size", required = true, defaultValue = "25") int size) {
+			Pageable pageable = PageRequest.of(page, size);
+				return service.getAuthorsFollowedBy(req, pageable);
+		}
 
 
 }

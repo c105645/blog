@@ -126,7 +126,7 @@ public class PostserviceController {
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = {
 					@Content(schema = @Schema(hidden = true)) }) })
 	public List<PostDto> fetchPosts(@RequestParam(name = "page", required = true, defaultValue = "0") int page,
-			@RequestParam(name = "size", required = true, defaultValue = "2") int size) {
+			@RequestParam(name = "size", required = true, defaultValue = "25") int size) {
 		Pageable pageable = PageRequest.of(page, size);
 		return service.getPostListByPage(pageable);
 	}
@@ -145,7 +145,7 @@ public class PostserviceController {
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = {
 					@Content(schema = @Schema(hidden = true)) }) })
 	public List<PostDto> fetchMostVotedPosts(@RequestParam(name = "page", required = true, defaultValue = "0") int page,
-			@RequestParam(name = "size", required = true, defaultValue = "2") int size) {
+			@RequestParam(name = "size", required = true, defaultValue = "25") int size) {
 		Pageable pageable = PageRequest.of(page, size);
 		return service.getMostVotedPosts(pageable);
 	}
@@ -165,7 +165,7 @@ public class PostserviceController {
 					@Content(schema = @Schema(hidden = true)) }) })
 	public List<PostDto> fetchMostCommentedPosts(
 			@RequestParam(name = "page", required = true, defaultValue = "0") int page,
-			@RequestParam(name = "size", required = true, defaultValue = "2") int size) {
+			@RequestParam(name = "size", required = true, defaultValue = "25") int size) {
 		Pageable pageable = PageRequest.of(page, size);
 		return service.getMostCommentedPosts(pageable);
 	}
@@ -185,7 +185,7 @@ public class PostserviceController {
 					@Content(schema = @Schema(hidden = true)) }) })
 	public List<PostDto> fetchPostsPageByCurrentUser(
 			@RequestParam(name = "page", required = true, defaultValue = "0") int page,
-			@RequestParam(name = "size", required = true, defaultValue = "2") int size) {
+			@RequestParam(name = "size", required = true, defaultValue = "25") int size) {
 		Pageable pageable = PageRequest.of(page, size);
 		return service.getPostsCreatedByCurrentUser(pageable);
 	}
@@ -205,7 +205,7 @@ public class PostserviceController {
 					@Content(schema = @Schema(hidden = true)) }) })
 	public List<PostDto> fetchMostCommentedPostsByCategory(@PathVariable String category,
 			@RequestParam(name = "page", required = true, defaultValue = "0") int page,
-			@RequestParam(name = "size", required = true, defaultValue = "2") int size) {
+			@RequestParam(name = "size", required = true, defaultValue = "25") int size) {
 		Pageable pageable = PageRequest.of(page, size);
 		return service.getMostCommentedPostsByCategory(category, pageable);
 	}
@@ -225,7 +225,7 @@ public class PostserviceController {
 					@Content(schema = @Schema(hidden = true)) }) })
 	public List<PostDto> fetchMostVotedPostsByCategory(@PathVariable String category,
 			@RequestParam(name = "page", required = true, defaultValue = "0") int page,
-			@RequestParam(name = "size", required = true, defaultValue = "2") int size) {
+			@RequestParam(name = "size", required = true, defaultValue = "25") int size) {
 		Pageable pageable = PageRequest.of(page, size);
 		return service.getMostVotedPostsByCategory(category, pageable);
 	}
@@ -247,7 +247,7 @@ public class PostserviceController {
 					@Content(schema = @Schema(hidden = true)) }) })
 	public List<PostDto> fetchPostsBySearchCriteria(@RequestBody SearchByCriteria req,
 			@RequestParam(name = "page", required = true, defaultValue = "0") int page,
-			@RequestParam(name = "size", required = true, defaultValue = "2") int size) {
+			@RequestParam(name = "size", required = true, defaultValue = "25") int size) {
 		Pageable pageable = PageRequest.of(page, size);
 		if (req.searchBy().equals("author")) {
 			return service.getPostsByAuthor(req.searchString(), pageable);
@@ -255,6 +255,10 @@ public class PostserviceController {
 			return service.getPostsByCategory(req.searchString(), pageable);
 		} else if (req.searchBy().equals("following")) {
 			return service.getPostsByFollowing(req.following(), pageable);
-		}else return null;
+		} else if (req.searchBy().equals("foryou")) {
+			return service.getPostsByFollowing(req.following(), pageable);
+		}
+		else return null;
 	}
+	
 }
