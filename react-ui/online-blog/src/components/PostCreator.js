@@ -12,6 +12,7 @@ const PostCreator = () => {
   const [errMsg, setErrMsg] = useState("");
   const axiosPrivate = useAxiosPrivate();
   const { auth, setAuth } = useAuth();
+  const [topics, setTopics] = useState();
   const navigate = useNavigate("");
 
   const [previewMode, setPreviewMode] = useState(false);
@@ -60,6 +61,34 @@ const PostCreator = () => {
   };
 
   const POSTLISTURL = "/post";
+  const TOPICS_URL = "/userprofile/categoery";
+
+
+  useEffect(() => {
+    const fetchtopics = async () => {
+        try {
+          const response = await axiosPrivate.get(
+            TOPICS_URL
+          );
+
+          setTopics(response.data);
+        } catch (err) {
+          if (!err?.response) {
+            setErrMsg("No Server Response");
+          } else if (err.response?.status === 400) {
+            setErrMsg("Missing Username or Password");
+          } else if (err.response?.status === 401) {
+            setErrMsg("Unauthorized. Login again by clicking on sign-in on top right");
+            setAuth(null);
+          } else {
+            setErrMsg("Posts could not be fetched");
+          }
+        }
+    
+      };
+      fetchtopics();
+    
+  },[])   
 
   const previewPost = () => {
     console.log("post preview");
@@ -79,7 +108,6 @@ const PostCreator = () => {
       createdBy: auth.user.username,
       createdAt: Date.now(),
     };
-    console.log(post);
     setPostObj(post);
     setPreviewMode(true);
   };
@@ -221,9 +249,7 @@ const PostCreator = () => {
             onChange={categorySelectHandler}
           >
             <option value="">Select Category...</option>
-            <option value="Technology">Technology</option>
-            <option value="Finance">Finance</option>
-            <option value="Creativity">Creativity</option>
+            {topics?.map(({name}) => <option value={name}>{name}</option>)}
           </Form.Select>
         </div>
         <div>
