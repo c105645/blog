@@ -1,29 +1,10 @@
 .post {
-    grid-template-rows: 4rem auto 4rem auto;
+    grid-template-rows: auto 4rem auto;
     display: grid;
     grid-column: 2/10;
   }
   
-    
-  .postHeader {
-    grid-template-columns: 4rem auto;
-    display: grid;
-    padding: 0.5rem 1rem 0.5rem 0rem;
-    line-height: 1.6rem;
-    border-bottom: 1px solid rgb(222, 226, 230);
-  }
-  
-  .profilePhoto {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
-  }
-    
-  .postContent {
-    padding-top: 1rem;
-    padding-bottom: 3rem;
-  }
-  
+      
   .postActions {
     color: #7d848b;
     display: grid;

@@ -5,10 +5,11 @@ import PostTile from "./PostTile";
 import { Form } from "react-bootstrap";
 import useAuth from "../hooks/useAuth";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import { Alert } from "reactstrap";
 import { useNavigate } from "react-router";
+import PostPreview from './PostPreview'
 
 const PostCreator = () => {
+    
   const [errMsg, setErrMsg] = useState("");
   const axiosPrivate = useAxiosPrivate();
   const { auth, setAuth } = useAuth();
@@ -63,32 +64,29 @@ const PostCreator = () => {
   const POSTLISTURL = "/post";
   const TOPICS_URL = "/userprofile/categoery";
 
-
   useEffect(() => {
     const fetchtopics = async () => {
-        try {
-          const response = await axiosPrivate.get(
-            TOPICS_URL
-          );
+      try {
+        const response = await axiosPrivate.get(TOPICS_URL);
 
-          setTopics(response.data);
-        } catch (err) {
-          if (!err?.response) {
-            setErrMsg("No Server Response");
-          } else if (err.response?.status === 400) {
-            setErrMsg("Missing Username or Password");
-          } else if (err.response?.status === 401) {
-            setErrMsg("Unauthorized. Login again by clicking on sign-in on top right");
-            setAuth(null);
-          } else {
-            setErrMsg("Posts could not be fetched");
-          }
+        setTopics(response.data);
+      } catch (err) {
+        if (!err?.response) {
+          setErrMsg("No Server Response");
+        } else if (err.response?.status === 400) {
+          setErrMsg("Missing Username or Password");
+        } else if (err.response?.status === 401) {
+          setErrMsg(
+            "Unauthorized. Login again by clicking on sign-in on top right"
+          );
+          setAuth(null);
+        } else {
+          setErrMsg("Posts could not be fetched");
         }
-    
-      };
-      fetchtopics();
-    
-  },[])   
+      }
+    };
+    fetchtopics();
+  }, []);
 
   const previewPost = () => {
     console.log("post preview");
@@ -128,9 +126,9 @@ const PostCreator = () => {
       category: postCategory,
       imageUrl: postContent
         ?.querySelector("img:first-child")
-        ?.getAttribute("src") ? postContent
-        ?.querySelector("img:first-child")
-        ?.getAttribute("src") :  "",
+        ?.getAttribute("src")
+        ? postContent?.querySelector("img:first-child")?.getAttribute("src")
+        : "",
       short_description: postContent?.innerText,
       postDetails: {
         content: postContent?.innerHTML,
@@ -238,7 +236,11 @@ const PostCreator = () => {
           </button>
         </div>
         <div className="tile">
-          <PostTile post={postObj} showReason={"Post Preview"} />
+          <PostPreview
+            postObj={postObj}
+            userObj={auth.user}
+            postDetailsObj={postObj.postDetails}
+          />
         </div>
         <br />
         <br />
@@ -249,7 +251,9 @@ const PostCreator = () => {
             onChange={categorySelectHandler}
           >
             <option value="">Select Category...</option>
-            {topics?.map(({name}) => <option value={name}>{name}</option>)}
+            {topics?.map(({ name }) => (
+              <option value={name}>{name}</option>
+            ))}
           </Form.Select>
         </div>
         <div>

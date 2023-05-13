@@ -3,14 +3,23 @@ import './PostComment.css';
 import { useEffect } from 'react';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import ReactTimeAgo from 'react-time-ago';
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en.json'
+
+
 import { useRef } from 'react';
-import axios from 'axios';
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 const PostComment = (props) => {
 
     const [comments, setComments] = useState(props.comments);    
     const [commentInput, setCommentInput] = useState("");
     const commentInputRef = useRef("");
+    const axiosPrivate = useAxiosPrivate();
+    TimeAgo.addDefaultLocale(en);
+
+    const POSTLISTURL = "/post/";
+
 
     useEffect(() => {
         setComments(props.postObj.comments);
@@ -18,20 +27,15 @@ const PostComment = (props) => {
 
     const buttonClickHandler = () => {
         console.log("Comment Created");
-        let newPost = props.postObj;
         let newComment = {
-            id: newPost.comments.length+1,
             review: commentInput,
-            createdBy: sessionStorage.getItem("loggedInUser"),
-            updatedAt: Date.now()
         }
         commentInputRef.current.value = "";
-        newPost.comments.push(newComment);
-        let commentURL = "http://localhost:3001/post/"+props.postObj.id;
-            axios.put(commentURL, newPost)
+        let commentURL = POSTLISTURL+props.postObj.id + "/comment";
+        axiosPrivate.post(commentURL, newComment)
                 .then(
                     (res)=> {
-                        console.log(res.data);
+                        setComments([...comments, res.data]);
                     }
                 )
                 .catch(
@@ -51,7 +55,7 @@ const PostComment = (props) => {
                     <button className="commentBtn" disabled={commentInput==""?true:false} id="submitCommentBtn" onClick={buttonClickHandler}>Comment</button>
                 </div>
             {
-            props.showComments===true && comments && comments.length!=0 ?
+            comments && comments.length!=0 ?
             comments.map( comment=> 
                 <div className="commentBlock">
                     <div className="commentHeader">

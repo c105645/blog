@@ -1,10 +1,11 @@
 package com.ness.postservice.entities;
 
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
@@ -28,7 +29,6 @@ public class PostDetails extends Base {
 	private Post post;
 
 	@Lob
-	@Column(name = "content", nullable = false)
 	private String content;
 	
 	public String getContent() {
