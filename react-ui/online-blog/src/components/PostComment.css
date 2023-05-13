@@ -1,0 +1,104 @@
+.commentBlock {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    font-size: 1.1rem;
+    border-bottom: 1px solid rgb(222, 226, 230);
+}
+.commentHeader {
+    display: grid;
+    width: fit-content;
+    height: 1.5rem;
+    font-size: 1rem;
+    grid-template-columns: 1.5rem auto auto auto;
+    grid-gap: 0.25rem;
+}
+.commentHeader img {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+}
+.commentAuthor {
+    font-weight: bold;
+}
+.commentTime {
+    color: #7d848b;
+}
+.commentForm {
+    -webkit-font-smoothing: antialiased;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: center;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    width: 100%;
+    margin-bottom: 1rem!important;
+}
+.commentInput {
+    box-sizing: border-box;
+    margin: 0;
+    font-family: inherit;
+    display: block;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    appearance: none;
+    border-radius: .375rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    position: relative;
+    flex: 1 1 auto;
+    width: 1%;
+    min-width: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.commentInput:focus {
+    color: #212529;
+    background-color: #fff;
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+}
+.commentBtn {
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 1px solid #0d6efd;
+    border-radius: .375rem;
+    width: fit-content;
+    padding: .375rem .75rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    position: relative;
+    z-index: 2;
+    color: #0d6efd;
+    background-color: #fff;
+    opacity: 1;
+    margin-left: -1px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.commentBtn[disabled] {
+    pointer-events: none;
+    opacity: 0.5;
+}
+.commentBtn[enabled] {
+    pointer-events: all;
+}
+.commentBtn:hover {
+    color: #fff;
+    background-color: #0d6efd;
+    border-color: #86b7fe;
+    outline: 0;
+}

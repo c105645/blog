@@ -3,13 +3,14 @@ import PostTile from "./PostTile";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { Alert } from "reactstrap";
 import useAuth from "../hooks/useAuth";
+import { useNavigate } from "react-router";
 
 const PostList = ({searchBy, searchString, title, authors}) => {
   const [postArr, setPostArr] = useState([]);
   const [errMsg, setErrMsg] = useState("");
   const axiosPrivate = useAxiosPrivate();
   const {auth,  setAuth } = useAuth();
-
+  const navigate = useNavigate('');
   const POSTLISTURL = "/post";
 
 
@@ -45,7 +46,7 @@ const PostList = ({searchBy, searchString, title, authors}) => {
   ) : (
     <div className="tileList">
       {postArr.length ? postArr?.map((post) => (
-        <div key={post.id} className="tile">
+        <div key={post.id} className="tile" onClick={() => navigate("/read/"+post.postId)}>
           <PostTile post={post} showReason={title} />
         </div>
       )): null}

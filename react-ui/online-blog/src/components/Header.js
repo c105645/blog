@@ -93,7 +93,7 @@ const Header = () => {
           </Nav>
           <Nav className="mr-auto" navbar>
             <NavItem className="mt-1">
-              <Button outline style={{ borderStyle: "none", outline: "none" }}>
+              <Button outline style={{ borderStyle: "none", outline: "none" }} onClick={()=>{navigate('/new-story')}}>
                 <FaEdit />
               </Button>
             </NavItem>
