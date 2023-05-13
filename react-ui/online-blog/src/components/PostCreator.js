@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import './PostCreator.css';
 import MediumEditor from "medium-editor";
 import PostTile from "./PostTile";
@@ -11,7 +11,6 @@ import useAuth from "../hooks/useAuth";
     const [previewButtonDisabled, setPreviewButtonDisabled] = useState(true);
     const [publishButtonDisabled, setPublishButtonDisabled] = useState(true);
     const [postObj, setPostObj] = useState({});
-    const categoeryRef = useRef('');
     const appendEditor = ()=> {
         setTimeout(() => {
             let editor = new MediumEditor('.editor-area', {
@@ -63,9 +62,10 @@ import useAuth from "../hooks/useAuth";
             postDetails: {
                 content: postContent?.innerHTML
             },
-            category: categoeryRef,
-            createdBy: auth.user.username
+            createdBy: auth.user.username,
+            createdAt: Date.now(),
         }
+        console.log(post);
         setPostObj(post)
         setPreviewMode(true)
     }
@@ -81,10 +81,9 @@ import useAuth from "../hooks/useAuth";
             postDetails: {
                 content: postContent?.innerHTML
             },
-            category: categoeryRef,
             createdBy: auth.user.username
         }
-
+        console.log(post);
     }
 
     const editPost = ()=> {
@@ -115,7 +114,8 @@ import useAuth from "../hooks/useAuth";
 
     const categorySelectHandler = ()=> {
         let publishBtn = document.querySelector('.preview-mode #publish-button')
-        if(categoeryRef.current.value === "") {
+        let postCategory = document.querySelector('.preview-mode #post-category').value
+        if(postCategory === "") {
             publishBtn.classList.remove('btn-green-enabled')
             setPublishButtonDisabled(true)
         } else {
@@ -124,7 +124,7 @@ import useAuth from "../hooks/useAuth";
         }
     }
     return (
-        <div>
+        <div className="container">
             <div className="editor-mode" hidden={previewMode}>
                 <div className="editor-navbar">
                     <button className="btn-green" id="preview-button" onClick={previewPost} disabled={previewButtonDisabled}>Publish</button>
@@ -142,12 +142,12 @@ import useAuth from "../hooks/useAuth";
                     <button className="btn-green-enabled" onClick={editPost}>Edit</button>
                 </div>
                 <div className="tile">
-                    <PostTile {...postObj}/>
+                    <PostTile post={postObj} showReason={"Post Preview"}/>
                 </div>
                 <br />
                 <br />
                 <div>
-                    <Form.Select aria-label="Select Category"id="post-category" ref={categoeryRef} onChange={categorySelectHandler}>
+                    <Form.Select aria-label="Select Category"id="post-category" onChange={categorySelectHandler}>
                         <option value="">Select Category...</option>
                         <option value="Technology">Technology</option>
                         <option value="Finance">Finance</option>

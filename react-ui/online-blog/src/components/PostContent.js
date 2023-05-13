@@ -93,8 +93,7 @@ const PostContent = (props) => {
             <div className="postHeader"><img className="profilePhoto" src={props.userObj.imageUrl}></img><div><div style={{fontSize:'1.4rem'}}>{props.userObj.firstName + " " + props.userObj.lastName}</div><div style={{fontSize:'1rem', color:'#7d848b'}}>{props.postObj.updatedAt}</div></div></div>
             <div className="postContent">
                 <div style={{fontSize:"2.2rem", fontWeight:"bold", lineHeight:"2.5rem", paddingBottom: "1rem"}}>{props.postObj.title}</div>
-            { parse(props.postDetailsObj.content)}
-            </div>
+                { props.postDetailsObj?props.postDetailsObj.content?parse(props.postDetailsObj.content):null:null}            </div>
             <div className="postActions">
                 <div className={upvoted?"postActionCountActive":"postActionCount"}><AiOutlineLike size='1.8rem' onClick={() => {upvote()}} /><div>{upVoteCount}</div></div>
                 <div className={downvoted?"postActionCountActive":"postActionCount"}><AiOutlineDislike size='1.8rem' onClick={() => {downvote()}} /><div>{downVoteCount}</div></div>

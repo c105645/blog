@@ -13,7 +13,7 @@ const PostTile = (props) => {
           <div className="tileGridContainer">
            <div className="tileText">
              <div style={{"fontSize": "18px", "fontWeight": "500" }}><h3>{props.post.title}</h3></div>
-            <div>{props.post.short_description.slice(0,200)}...</div>
+            <div>{props.post?.short_description?.slice(0,200)}...</div>
            </div>
            
             <div className="tileImage"><img src={props.post.imageUrl} width="100px" height="100px"/></div>

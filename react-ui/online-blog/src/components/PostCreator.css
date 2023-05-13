@@ -60,6 +60,8 @@
 .title {
     flex: 0;
     margin-bottom: 1rem;
+    font-size: 40px;
+    font-weight: 400
 }
 
 .content {

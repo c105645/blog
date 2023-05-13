@@ -9,9 +9,6 @@ const RecommendedAuthors = ({authors}) => {
 
   const navigate = useNavigate();
 
-
-
-
   return (
     authors?.map((author) => (
     <div key={author.id} className="follow-content">
