@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import PostContent from './PostContent';
 import { useEffect } from 'react';
 import './PostReader.css';
-import AuthorRightPanel from './AuthorRightPanel';
 import useAuth from '../hooks/useAuth';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
@@ -24,13 +23,13 @@ const PostReader = () => {
         const fetchPost = async () => {
             try {
                 const postsResponse = await axiosPrivate.get(
-                    POSTS_URL+params.postId
+                    POSTS_URL+"/" + params.postId
                 );
                 setPostObj(postsResponse.data);
                 const authorName = postsResponse.data.createdBy;
                 
                 const authorResponse = await axiosPrivate.get(
-                    USER_URL+authorName
+                    USER_URL + "/"+authorName
                 );
                 setAuthor(authorResponse.data);
             } catch (err) {
@@ -96,7 +95,6 @@ const PostReader = () => {
     return(
         <div className="postContainer">
             <PostContent postObj = {postObj} userObj = {author} postDetailsObj = {postObj.postDetails} refreshPost={refreshPost}/>
-            <AuthorRightPanel author={author} followEvt = {HandleFollow}   />
         </div>
     );
 }

@@ -46,7 +46,7 @@ const PostList = ({searchBy, searchString, title, authors}) => {
   ) : (
     <div className="tileList">
       {postArr.length ? postArr?.map((post) => (
-        <div key={post.id} className="tile" onClick={() => navigate("/read/"+post.postId)}>
+        <div key={post.id} className="tile" onClick={() => navigate("/read/"+post.id)}>
           <PostTile post={post} showReason={title} />
         </div>
       )): null}
