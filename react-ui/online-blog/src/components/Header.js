@@ -35,6 +35,8 @@ const Header = () => {
     setSearchInput(e.target.value);
     if(searchInput && searchInput.length > 0)
     navigate("/search", {state:{inputstring: searchInput}});
+    setSearchInput("");
+
   };
 
   return (

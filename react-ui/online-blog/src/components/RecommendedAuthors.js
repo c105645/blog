@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import avatar from '../svg/avatar-male.svg';
 import './RecommendedAuthors.css';
 import { useNavigate } from "react-router-dom";
@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 
 
 const RecommendedAuthors = ({authors}) => {
-
 
   const navigate = useNavigate();
 

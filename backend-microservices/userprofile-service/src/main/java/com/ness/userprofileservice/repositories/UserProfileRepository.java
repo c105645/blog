@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -26,6 +27,10 @@ public interface UserProfileRepository extends JpaRepository<UserProfileEntity, 
 
 	@Query("select u from UserProfileEntity u where u.username in ?1")
 	public Page<UserProfileEntity> findAllByUsername(List<String> users, Pageable firstPage);
+	
+	@Query("select u from UserProfileEntity u where lower(u.username) LIKE lower(concat('%', concat(?1, '%'))) or lower(u.firstName) LIKE lower(concat('%', concat(?1, '%'))) or lower(u.lastName) LIKE lower(concat('%', concat(?1, '%'))) or lower(u.email) LIKE lower(concat('%', concat(?1, '%'))) or lower(u.biography) LIKE lower(concat('%', concat(?1, '%')))")
+	Slice<UserProfileEntity> findAllBySearchString(String searchString, Pageable firstPage);
+	
 
 
 

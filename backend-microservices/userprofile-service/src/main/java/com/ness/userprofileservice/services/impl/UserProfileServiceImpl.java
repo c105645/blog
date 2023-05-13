@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ness.userprofileservice.dtos.CategoryDto;
+import com.ness.userprofileservice.dtos.SearchByCriteriaResults;
 import com.ness.userprofileservice.dtos.UserProfileDto;
 import com.ness.userprofileservice.entities.Category;
 import com.ness.userprofileservice.entities.UserProfileEntity;
@@ -28,9 +29,8 @@ import com.ness.userprofileservice.services.UserProfileService;
 import jakarta.transaction.Transactional;
 
 @Service
-public class UserProfileServiceImpl implements UserProfileService{
-	
-	
+public class UserProfileServiceImpl implements UserProfileService {
+
 	private final UserProfileRepository repository;
 	private final CategoryRepository catrepo;
 
@@ -39,167 +39,172 @@ public class UserProfileServiceImpl implements UserProfileService{
 
 	private final PasswordEncoder passwordEncoder;
 
-	public UserProfileServiceImpl(UserProfileRepository repository,CategoryRepository catrepo,
+	public UserProfileServiceImpl(UserProfileRepository repository, CategoryRepository catrepo,
 			CategoryMapper catmapper, UserProfileMapper usermapper, PasswordEncoder passwordEncoder) {
 		this.repository = repository;
 		this.usermapper = usermapper;
-		this.passwordEncoder=passwordEncoder;
+		this.passwordEncoder = passwordEncoder;
 		this.catrepo = catrepo;
 		this.catmapper = catmapper;
 	}
 
 	@Override
-    @Transactional()
-    public UserProfileDto registerUser(UserProfileDto user) throws UserAlreadyExistsException {
-	       Optional<UserProfileEntity> userent = repository.findUserProfileByUserNameOrEmail(user.username(), user.email());
-	             
-	       if(userent.isEmpty()) {
-				UserProfileEntity userProfileEntity = usermapper.toEntity(user);
-				userProfileEntity.setPassword(passwordEncoder.encode(user.password()));
-				UserProfileEntity savedEntity =  repository.save(userProfileEntity);
-				return usermapper.toDto(savedEntity);
-	       }else {
-	    	   throw new UserAlreadyExistsException("User with username or email id alredy exists");
-	       }     
-    }
+	@Transactional()
+	public UserProfileDto registerUser(UserProfileDto user) throws UserAlreadyExistsException {
+		Optional<UserProfileEntity> userent = repository.findUserProfileByUserNameOrEmail(user.username(),
+				user.email());
 
-	@Override
-    @Transactional()
-	public UserProfileDto updateUser(Long userId, UserProfileDto user) throws UserNotFoundException, OperationNotAllowedException {
-    	UserProfileEntity userent = repository.findById(userId).orElseThrow(() -> new UserNotFoundException("User Not Found"));
-	    if(!userent.getUsername().equals(user.username()) && !userent.getEmail().equals(user.email())) {
-	    	throw new OperationNotAllowedException("You cannot modify username and email details of an user");
-	    }
-		UserProfileEntity userProfileEntity = usermapper.toEntity(user);
-		UserProfileEntity savedEntity =  repository.save(userProfileEntity);
-		return usermapper.toDto(savedEntity); 
-    }
-
-    
-
-	@Override
-    @Transactional()
-    public void deleteUser(Long userId) throws UserNotFoundException {
-    	repository.findById(userId).orElseThrow(() -> new UserNotFoundException("User Not Found"));
-		repository.deleteById(userId);	
-    }
-    
-	
-	
-	@Override
-    @Transactional()
-    public UserProfileDto getUserById(Long userId) throws UserNotFoundException {
-    	UserProfileEntity user = repository.findById(userId).orElseThrow(() -> new UserNotFoundException("user not found"));
-    	return usermapper.toDto(user);
-    }
-    
-	@Override
-    @Transactional()
-    public boolean VerifyIfEmailAlreadyExists(String email) {
-    	Optional<UserProfileEntity> useropt = repository.findUserProfileByEmail(email);
-    	return useropt.isPresent();
-    }
-
-	@Override
-    @Transactional()
-	public boolean VerifyIfUsernameAlreadyExists(String username) {
-    	Optional<UserProfileEntity> useropt = repository.findUserProfileByUsername(username);
-    	return useropt.isPresent();
+		if (userent.isEmpty()) {
+			UserProfileEntity userProfileEntity = usermapper.toEntity(user);
+			userProfileEntity.setPassword(passwordEncoder.encode(user.password()));
+			UserProfileEntity savedEntity = repository.save(userProfileEntity);
+			return usermapper.toDto(savedEntity);
+		} else {
+			throw new UserAlreadyExistsException("User with username or email id alredy exists");
+		}
 	}
 
+	@Override
+	@Transactional()
+	public UserProfileDto updateUser(Long userId, UserProfileDto user)
+			throws UserNotFoundException, OperationNotAllowedException {
+		UserProfileEntity userent = repository.findById(userId)
+				.orElseThrow(() -> new UserNotFoundException("User Not Found"));
+		if (!userent.getUsername().equals(user.username()) && !userent.getEmail().equals(user.email())) {
+			throw new OperationNotAllowedException("You cannot modify username and email details of an user");
+		}
+		UserProfileEntity userProfileEntity = usermapper.toEntity(user);
+		UserProfileEntity savedEntity = repository.save(userProfileEntity);
+		return usermapper.toDto(savedEntity);
+	}
 
 	@Override
-    @Transactional()
+	@Transactional()
+	public void deleteUser(Long userId) throws UserNotFoundException {
+		repository.findById(userId).orElseThrow(() -> new UserNotFoundException("User Not Found"));
+		repository.deleteById(userId);
+	}
+
+	@Override
+	@Transactional()
+	public UserProfileDto getUserById(Long userId) throws UserNotFoundException {
+		UserProfileEntity user = repository.findById(userId)
+				.orElseThrow(() -> new UserNotFoundException("user not found"));
+		return usermapper.toDto(user);
+	}
+
+	@Override
+	@Transactional()
+	public boolean VerifyIfEmailAlreadyExists(String email) {
+		Optional<UserProfileEntity> useropt = repository.findUserProfileByEmail(email);
+		return useropt.isPresent();
+	}
+
+	@Override
+	@Transactional()
+	public boolean VerifyIfUsernameAlreadyExists(String username) {
+		Optional<UserProfileEntity> useropt = repository.findUserProfileByUsername(username);
+		return useropt.isPresent();
+	}
+
+	@Override
+	@Transactional()
 	public UserProfileDto fetchByUsername(String username) throws UserNotFoundException {
-		UserProfileEntity user = repository.findUserProfileByUsername(username).orElseThrow(() -> new UserNotFoundException("user not found"));
+		UserProfileEntity user = repository.findUserProfileByUsername(username)
+				.orElseThrow(() -> new UserNotFoundException("user not found"));
 		System.out.println(user);
 		return usermapper.toDto(user);
-   	}
-	
-	
-	@Override
-    @Transactional()
-    public void addFollower(Long userId, Long toFollowId) throws UserNotFoundException {
-    	UserProfileEntity user = repository.findById(userId).orElseThrow(() -> new UserNotFoundException("user not found"));
-    	UserProfileEntity toFollow = repository.findById(toFollowId).orElseThrow(() -> new UserNotFoundException("user profile to follow is not found"));
-        user.addFollower(toFollow);
-        repository.save(user);
-    }
-    
-	@Override
-    @Transactional()
-    public void unfollow(Long userId, Long toUnFollowId) throws UserNotFoundException {      
-        UserProfileEntity user = repository.findById(userId).orElseThrow(() -> new UserNotFoundException("user not found"));
-    	UserProfileEntity toUnFollow = repository.findById(toUnFollowId).orElseThrow(() -> new UserNotFoundException("user profile to unfollow is not found"));
-        user.removeFollower(toUnFollow);
-        repository.save(user);
-    }
-	
-	@Override
-    @Transactional()
-    public List<UserProfileDto> getFollowers(Long userId) throws UserNotFoundException {
-    	UserProfileEntity user =  repository.findById(userId).orElseThrow(() -> new UserNotFoundException("user not found"));
-    	return user.getFollowers().stream().map(item->usermapper.toDto(item)).collect(Collectors.toList());    			
-    }
-	
-	
-	@Override
-    @Transactional()
-    public List<UserProfileDto> getFollowing(Long userId) throws UserNotFoundException {
-        UserProfileEntity user =  repository.findById(userId).orElseThrow(() -> new UserNotFoundException("user not found"));
-    	return user.getFollowing().stream().map(item->usermapper.toDto(item)).collect(Collectors.toList());    			
-    }
+	}
 
-	
+	@Override
+	@Transactional()
+	public void addFollower(Long userId, Long toFollowId) throws UserNotFoundException {
+		UserProfileEntity user = repository.findById(userId)
+				.orElseThrow(() -> new UserNotFoundException("user not found"));
+		UserProfileEntity toFollow = repository.findById(toFollowId)
+				.orElseThrow(() -> new UserNotFoundException("user profile to follow is not found"));
+		user.addFollower(toFollow);
+		repository.save(user);
+	}
+
+	@Override
+	@Transactional()
+	public void unfollow(Long userId, Long toUnFollowId) throws UserNotFoundException {
+		UserProfileEntity user = repository.findById(userId)
+				.orElseThrow(() -> new UserNotFoundException("user not found"));
+		UserProfileEntity toUnFollow = repository.findById(toUnFollowId)
+				.orElseThrow(() -> new UserNotFoundException("user profile to unfollow is not found"));
+		user.removeFollower(toUnFollow);
+		repository.save(user);
+	}
+
+	@Override
+	@Transactional()
+	public List<UserProfileDto> getFollowers(Long userId) throws UserNotFoundException {
+		UserProfileEntity user = repository.findById(userId)
+				.orElseThrow(() -> new UserNotFoundException("user not found"));
+		return user.getFollowers().stream().map(item -> usermapper.toDto(item)).collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional()
+	public List<UserProfileDto> getFollowing(Long userId) throws UserNotFoundException {
+		UserProfileEntity user = repository.findById(userId)
+				.orElseThrow(() -> new UserNotFoundException("user not found"));
+		return user.getFollowing().stream().map(item -> usermapper.toDto(item)).collect(Collectors.toList());
+	}
+
 	@Transactional()
 	@Override
 	public CategoryDto addNewCategoery(CategoryDto categoery) throws CategoryAlreadyExistsException {
-		 Optional<Category> catent = catrepo.findByName(categoery.name());
-         
-	       if(catent.isEmpty()) {
-	    	   return  catmapper.toDto(catrepo.save(catmapper.toEntity(categoery)));
-	       }else {
-	    	   throw new CategoryAlreadyExistsException("Category with name alredy exists");
-	       }     
+		Optional<Category> catent = catrepo.findByName(categoery.name());
+
+		if (catent.isEmpty()) {
+			return catmapper.toDto(catrepo.save(catmapper.toEntity(categoery)));
+		} else {
+			throw new CategoryAlreadyExistsException("Category with name alredy exists");
+		}
 	}
-	
+
 	@Override
-    @Transactional()
+	@Transactional()
 	public CategoryDto updateCategoery(Long id, CategoryDto category) throws CategoryNotFoundException {
-    	catrepo.findById(id).orElseThrow(() -> new CategoryNotFoundException("Category Not Found")); 
-    	Category catentity = catmapper.toEntity(category);
-    	Category savedEntity =  catrepo.save(catentity);
-		return catmapper.toDto(savedEntity); 
-    }
+		catrepo.findById(id).orElseThrow(() -> new CategoryNotFoundException("Category Not Found"));
+		Category catentity = catmapper.toEntity(category);
+		Category savedEntity = catrepo.save(catentity);
+		return catmapper.toDto(savedEntity);
+	}
 
-	
 	@Override
-    @Transactional()
-    public void deleteCategoery(Long id) throws CategoryNotFoundException {
-    	catrepo.findById(id).orElseThrow(() -> new CategoryNotFoundException("Category Not Found"));
-		catrepo.deleteById(id);	
-    }
+	@Transactional()
+	public void deleteCategoery(Long id) throws CategoryNotFoundException {
+		catrepo.findById(id).orElseThrow(() -> new CategoryNotFoundException("Category Not Found"));
+		catrepo.deleteById(id);
+	}
 
-	
 	@Override
-    @Transactional()
-    public void addTopic(Long topicId) throws CategoryNotFoundException, UserNotFoundException {
+	@Transactional()
+	public void addTopic(Long topicId) throws CategoryNotFoundException, UserNotFoundException {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-    	UserProfileEntity user = repository.findUserProfileByUsername(username).orElseThrow(() -> new UserNotFoundException("user not found"));
-    	Category category =  catrepo.findById(topicId).orElseThrow(() -> new CategoryNotFoundException("Category Not Found"));  	
-    	user.addCategory(category);
-        repository.save(user);
-    }
-	
+		UserProfileEntity user = repository.findUserProfileByUsername(username)
+				.orElseThrow(() -> new UserNotFoundException("user not found"));
+		Category category = catrepo.findById(topicId)
+				.orElseThrow(() -> new CategoryNotFoundException("Category Not Found"));
+		user.addCategory(category);
+		repository.save(user);
+	}
+
 	@Override
-    @Transactional()
-    public void removeTopic(Long topicId) throws CategoryNotFoundException, UserNotFoundException {
+	@Transactional()
+	public void removeTopic(Long topicId) throws CategoryNotFoundException, UserNotFoundException {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-    	UserProfileEntity user = repository.findUserProfileByUsername(username).orElseThrow(() -> new UserNotFoundException("user not found"));
-    	Category category =  catrepo.findById(topicId).orElseThrow(() -> new CategoryNotFoundException("Category Not Found"));  	
-    	user.removeCategory(category);
-        repository.save(user);
-    }
+		UserProfileEntity user = repository.findUserProfileByUsername(username)
+				.orElseThrow(() -> new UserNotFoundException("user not found"));
+		Category category = catrepo.findById(topicId)
+				.orElseThrow(() -> new CategoryNotFoundException("Category Not Found"));
+		user.removeCategory(category);
+		repository.save(user);
+	}
 
 	@Override
 	public List<UserProfileDto> fetchUsers() {
@@ -215,22 +220,51 @@ public class UserProfileServiceImpl implements UserProfileService{
 	@Override
 	public List<UserProfileDto> getAuthorsFollowedBy(List<String> req, Pageable pageable) {
 		List<UserProfileEntity> users = repository.findAllByUsername(req, pageable).getContent();
-		
+
 		List<String> followingList = new ArrayList<>();
 		List<UserProfileDto> usersList = new ArrayList<>();
-		
+
 		users.stream().forEach(user -> {
 			user.getFollowing().stream().forEach(following -> {
-				if(followingList.indexOf(following.getUsername()) == -1) {
+				if (followingList.indexOf(following.getUsername()) == -1) {
 					followingList.add(following.getUsername());
 					usersList.add(usermapper.toDto(following));
 				}
 			});
 		});
-		
+
 		return usersList;
 	}
+
+	@Override
+	public SearchByCriteriaResults getMatchingAuthor(String searchString, Pageable pageable) {
+		List<UserProfileDto> users = repository.findAllBySearchString(searchString, pageable).getContent().stream()
+				.map(user -> usermapper.toDto(user)).collect(Collectors.toList());
+		
+		System.out.println(users);
+
+		SearchByCriteriaResults.SearchByCriteriaResultsBuilder searchresults = SearchByCriteriaResults.builder();
+
+		searchresults.searchBy("author");
+		searchresults.searchString(searchString);
+		searchresults.authors(users);
+		searchresults.categories(null);
+
+		return searchresults.build();
+	}
+
+	@Override
+	public SearchByCriteriaResults getMatchingCategories(String searchString, Pageable pageable) {
+		List<CategoryDto> categories = catrepo.findAllBySearchString(searchString, pageable).getContent().stream()
+				.map(cat -> catmapper.toDto(cat)).collect(Collectors.toList());
+
+		SearchByCriteriaResults.SearchByCriteriaResultsBuilder searchresults = SearchByCriteriaResults.builder();
+
+		searchresults.searchBy("categoery");
+		searchresults.searchString(searchString);
+		searchresults.authors(null);
+		searchresults.categories(categories);
+
+		return searchresults.build();
+	}
 }
-
-
-

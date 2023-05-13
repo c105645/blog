@@ -160,25 +160,11 @@ public class PostServiceImpl implements PostService {
 	@Override
 	@Transactional()
 	public List<PostDto> getPostsBySearchString(String searchString, Pageable pageable) {
-		String user = SecurityContextHolder.getContext().getAuthentication().getName();
-		Post  postProbe = new Post();
-		postProbe.setTitle(searchString);
-		postProbe.setShort_description(searchString);
-		postProbe.setCategory(searchString);
-		postProbe.setCreatedBy(searchString);
-
-		ExampleMatcher customMatcher = ExampleMatcher.matching()
-			    .withMatcher("title", match -> match.contains().ignoreCase())
-			    .withMatcher("short_description", match -> match.contains().ignoreCase())
-			    .withMatcher("category", match -> match.contains().ignoreCase())
-			    .withMatcher("createdBy", match -> match.contains().ignoreCase());
-
 		
-		Example<Post> postExample = Example.of(postProbe, customMatcher);
-
-		List<Post> posts = repo.findAll(postExample, pageable).getContent();
+		List<Post> posts = repo.findAllBySearchString(searchString, pageable).getContent();
 		
 		return posts.stream().map(post -> postlistmapper.toDto(post)).collect(Collectors.toList());
+		
 	}
 
 }

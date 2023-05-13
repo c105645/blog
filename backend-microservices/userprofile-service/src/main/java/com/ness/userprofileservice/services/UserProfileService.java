@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ness.userprofileservice.dtos.CategoryDto;
+import com.ness.userprofileservice.dtos.SearchByCriteriaResults;
 import com.ness.userprofileservice.dtos.UserProfileDto;
 import com.ness.userprofileservice.exceptions.CategoryAlreadyExistsException;
 import com.ness.userprofileservice.exceptions.CategoryNotFoundException;
@@ -55,5 +56,9 @@ public interface UserProfileService {
 	List<CategoryDto> fetchAllCategories();
 
 	List<UserProfileDto> getAuthorsFollowedBy(List<String> req, Pageable pageable);
+
+	SearchByCriteriaResults getMatchingAuthor(String searchString, Pageable pageable);
+
+	SearchByCriteriaResults getMatchingCategories(String searchString, Pageable pageable);
 
 }

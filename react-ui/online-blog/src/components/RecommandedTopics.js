@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom"
 
 
 
-const RecommandedTopics = (props) => {
+const RecommandedTopics = () => {
 
 const TOPICS_URL = "/userprofile/categoery";
 const [topics, setTopics] = useState();
