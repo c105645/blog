@@ -56,7 +56,8 @@ public class CommentServiceImpl implements CommentService{
 				.orElseThrow(() -> new PostNotFoundException("Post with id " + postid + " doesnot exists"));
 		
 		Comment commentEntity = mapper.toEntity(comment);
-		
+		post.addComment(commentEntity);
+		post.setCommentCount(post.getCommentCount() + 1);
 		commentEntity.setPost(post);
 		Comment com =  repo.save(commentEntity);
 		return mapper.toDto(com);
@@ -73,6 +74,7 @@ public class CommentServiceImpl implements CommentService{
 	@Transactional()
 	public void delete(Long commentid) throws CommentNotFoundException {
 		repo.findById(commentid).orElseThrow(() -> new CommentNotFoundException("comment with id " + commentid + " doesnot exists"));
+		
 		votesservice.deleteCommentVotes(commentid);
 		repo.deleteById(commentid);
 	}

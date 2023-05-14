@@ -157,6 +157,38 @@ public class PostServiceImpl implements PostService {
 		return posts.stream().map(post -> postlistmapper.toDto(post)).collect(Collectors.toList());
 	}
 
+	
+//	@Override
+//	@Transactional()
+//	public List<PostDto> getPostsBySearchString(String searchString, Pageable pageable) {
+//
+//		System.out.println("inside getPostsBySearchString" );
+//		Post  postProbe = new Post();
+//		postProbe.setCreatedBy(searchString);
+//		postProbe.setCategory(searchString);
+//		postProbe.setTitle(searchString);
+//		postProbe.setShort_description(searchString);
+//		
+//		System.out.println(postProbe);
+//		
+//		ExampleMatcher customExampleMatcher = ExampleMatcher.matchingAny()
+//                .withMatcher("title", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+//                .withMatcher("category", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+//                .withMatcher("createdBy", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+//				.withMatcher("short_description", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+//				 .withIgnorePaths("commentCount", "upVoteCount", "downVoteCount","comments", "postDetails", "imageUrl");
+//		
+//		System.out.println(customExampleMatcher);
+//
+//		Example<Post> postExample= Example.of(postProbe, customExampleMatcher);
+//
+//
+//		List<Post> posts = repo.findAll(postExample, pageable).getContent();
+//		
+//		return posts.stream().map(post -> postlistmapper.toDto(post)).collect(Collectors.toList());
+//		
+//	}
+	
 	@Override
 	@Transactional()
 	public List<PostDto> getPostsBySearchString(String searchString, Pageable pageable) {
