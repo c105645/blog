@@ -8,97 +8,23 @@ import parse, { domToReact } from 'html-react-parser';
 import PostPreview from './PostPreview'
 
 const PostContent = (props) => {
-    const [showComments, setShowComments] = useState(false);
-    const [upVoteCount, setUpVoteCount] = useState(0);
-    const [downVoteCount, setDownVoteCount] = useState(0);
-    const [upvoted, setUpVoted] = useState(false);
-    const [downvoted, setDownVoted] = useState(false);
-
-    useEffect(()=> {
-        if(props.postObj.upVotedBy && props.postObj.downVotedBy) {
-
-            setUpVoteCount(props.postObj.upVotedBy.length);
-            setDownVoteCount(props.postObj.downVotedBy.length);
-            isAlreadyUpvoted()?setUpVoted(true):setUpVoted(false);
-            isAlreadyDownVoted()?setDownVoted(true):setDownVoted(false);
-        }
-    }, [props]);
-
-    const isAlreadyUpvoted = () => {
-        return props.postObj.upVotedBy && props.postObj.upVotedBy.some(user => user === sessionStorage.getItem("loggedInUser"));
-    }
-    
-    const isAlreadyDownVoted = () => {
-        return props.postObj.downVotedBy && props.postObj.downVotedBy.some(user => user === sessionStorage.getItem("loggedInUser"));
+   
+    const addCommenttoPost = (comment) => {
+        props.addCommentEvt(comment);
     }
 
-    const showCommentsHandler = () => {
-        setShowComments(showComments => !showComments);
-    }
-    
-    const incrementCount = (setCount, currentCount, setVoted, voted) => {
-        if(!voted) {
-            setCount(currentCount+1);
-            const username = sessionStorage.getItem("loggedInUser");
-            setVoted(true);
-            
-        }
-    }
-
-    const upvote = () => {
-        if(!upvoted) {
-            setUpVoteCount(upVoteCount+1);
-            setUpVoted(true);
-            const username = sessionStorage.getItem("loggedInUser");
-            let newPostObj = props.postObj;
-            let upvotedArr = newPostObj.upVotedBy;
-            upvotedArr.push(username);
-            newPostObj['upVotedBy'] = upvotedArr;
-            let upvoteURL = "http://localhost:3001/post/"+props.postObj.id;
-            axios.put(upvoteURL, newPostObj)
-                .then(
-                    (res)=> {
-                        console.log(res.data);
-                    }
-                )
-                .catch(
-                    (err)=>console.log(err)
-                );
-        }
-    }
-
-    const downvote = () => {
-        if(!downvoted) {
-            setDownVoteCount(downVoteCount+1);
-            setDownVoted(true);
-            const username = sessionStorage.getItem("loggedInUser");
-            let newPostObj = props.postObj;
-            let downvotedArr = newPostObj.downVotedBy;
-            downvotedArr.push(username);
-            newPostObj['downVotedBy'] = downvotedArr;
-            let downvoteURL = "http://localhost:3001/post/"+props.postObj.id;
-            axios.put(downvoteURL, newPostObj)
-                .then(
-                    (res)=> {
-                        console.log(res.data);
-                    }
-                )
-                .catch(
-                    (err)=>console.log(err)
-                );
-        }
-    }
+ 
     return(
         <div className="post">
-            {console.log(props.postDetailsObj)}
+            {console.log(props)}
             
             <PostPreview {...props} />
             <div className="postActions">
-                <div className={upvoted?"postActionCountActive":"postActionCount"}><AiOutlineLike size='1.8rem' onClick={() => {upvote()}} /><div>{upVoteCount}</div></div>
-                <div className={downvoted?"postActionCountActive":"postActionCount"}><AiOutlineDislike size='1.8rem' onClick={() => {downvote()}} /><div>{downVoteCount}</div></div>
-                <div className="postActionCount"><AiOutlineComment size='1.8rem' onClick={showCommentsHandler} /><div>{props.postObj.commentCount}</div></div>
+                <div className={props.hasVoted==1?"postActionCountActive":"postActionCount"}><AiOutlineLike size='1.8rem' onClick={props.upVoteEVT} /><div>{props.postObj.upVoteCount}</div></div>
+                <div className={props.hasVoted==-1?"postActionCountActive":"postActionCount"}><AiOutlineDislike size='1.8rem' onClick={props.downVoteEVT}/><div>{props.postObj.downVoteCount}</div></div>
+                <div className={props.hasCommented ? "postActionCountActive":"postActionCount"}><AiOutlineComment size='1.8rem' /><div>{props.postObj.commentCount}</div></div>
             </div>
-            <PostComment showComments = {showComments} postObj={props.postObj} refreshPost={props.refreshPost}/>
+            <PostComment  postObj={props.postObj} addcommentEVT={addCommenttoPost} refreshPost={props.refreshPost}/>
         </div>
     );
 }

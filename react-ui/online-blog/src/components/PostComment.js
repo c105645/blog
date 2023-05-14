@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './PostComment.css';
 import { useEffect } from 'react';
-import { Button, Form, InputGroup } from 'react-bootstrap';
 import ReactTimeAgo from 'react-time-ago';
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en.json'
@@ -30,17 +29,9 @@ const PostComment = (props) => {
         let newComment = {
             review: commentInput,
         }
+        props.addcommentEVT(newComment);
         commentInputRef.current.value = "";
-        let commentURL = POSTLISTURL+props.postObj.id + "/comment";
-        axiosPrivate.post(commentURL, newComment)
-                .then(
-                    (res)=> {
-                        setComments([...comments, res.data]);
-                    }
-                )
-                .catch(
-                    (err)=>console.log(err)
-                );
+ 
         props.refreshPost();
     }
 
@@ -51,8 +42,8 @@ const PostComment = (props) => {
     return(
         <div>
                 <div className="commentForm">
-                    <input className="commentInput" type = "text" placeholder="Leave a comment..." ref={commentInputRef} onChange={commentInpuChangeHandler}/>
-                    <button className="commentBtn" disabled={commentInput==""?true:false} id="submitCommentBtn" onClick={buttonClickHandler}>Comment</button>
+                    <input type = "textarea" rows="10" className="commentInput"  placeholder="Leave a comment..." ref={commentInputRef} onChange={commentInpuChangeHandler}/>
+                    <button className="commentBtn" disabled={commentInput==""?true:false} id="submitCommentBtn" onClick={buttonClickHandler}>Post</button>
                 </div>
             {
             comments && comments.length!=0 ?
