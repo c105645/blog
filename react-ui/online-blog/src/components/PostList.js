@@ -17,7 +17,7 @@ const PostList = ({searchBy, searchString, title, authors}) => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const following = [...auth?.user?.following.map(usr => usr.username)];
+        const following = searchBy == "foryou" ? authors : [...auth?.user?.following.map(usr => usr.username)];
         const response = await axiosPrivate.post(
           POSTLISTURL + "/search?page=0&size=20", {"searchBy": searchBy, "searchString": searchString, following, authors }
         );

@@ -61,7 +61,7 @@ const AuthorRightPanel = ({ author, followEvt }) => {
           {author.biography}
         </div>
       </div>
-      {author.following?.length && (
+      {author.following?.length ? (
         <div className="rightbar__reading__lists">
           <h2
             style={{
@@ -75,7 +75,7 @@ const AuthorRightPanel = ({ author, followEvt }) => {
           </h2>
           <RecommandedAuthors authors={author.following} />
         </div>
-      )}
+      ) : null}
     </div>
   );
 };

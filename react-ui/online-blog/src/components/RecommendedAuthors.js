@@ -14,7 +14,7 @@ const RecommendedAuthors = ({authors}) => {
   return (
     authors?.map((author) => (
     <div key={author.id} className="follow-content">
-      <div style={{paddingRight:'10px'}}><img style={{borderRadius: '50%'}} src={avatar} width="25px" height="25px"/> </div>
+      <div style={{paddingRight:'10px'}}><img style={{borderRadius: '50%'}} src={author.imageUrl} width="40px" height="40px"/> </div>
       <div className="info">
         <span style={{"fontSize": "25px", "fontWeight": "500"}}>{author.firstName} &nbsp; </span>
         <span>@{String(author?.email).split("@")[0]}</span>

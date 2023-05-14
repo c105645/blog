@@ -98,14 +98,16 @@ const Header = () => {
                 <FaEdit />
               </Button>
             </NavItem>
-            <NavItem style={{ marginTop: "14px" }}>
-              <p>
-                <span>
+            <NavItem style={{ marginTop: "8px" }}>
+              <div>
+              <span style={{paddingLeft:'10px'}}><img style={{borderRadius: '50%'}} src={auth.user.imageUrl} width="30px" height="30px"/> </span>
+
+                {/* <span>
                   &nbsp;&nbsp;
                   <BsPersonCircle />
-                </span>
+                </span> */}
                 &nbsp;{auth.user.username}&nbsp;&nbsp;
-              </p>
+              </div>
             </NavItem>
             <NavItem className="mt-1">
               {auth?.user && (
