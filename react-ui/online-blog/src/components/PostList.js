@@ -39,7 +39,7 @@ const PostList = ({searchBy, searchString, title, authors}) => {
       }
     };
     fetchPosts();
-  }, [searchBy, searchString]);
+  }, [searchBy, searchString, authors]);
 
   return errMsg.length > 0 ? (
     <Alert style={{fontSize:"20px"}} color="danger">{errMsg}</Alert>
