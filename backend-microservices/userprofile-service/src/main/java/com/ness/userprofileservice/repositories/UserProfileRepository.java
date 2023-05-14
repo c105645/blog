@@ -32,6 +32,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfileEntity, 
 	Slice<UserProfileEntity> findAllBySearchString(String searchString, Pageable firstPage);
 	
 
-
+	 @Query("select u from UserProfileEntity u left join u.categories c where c.id = ?1")
+	 List<UserProfileEntity> findUserWithCategoery(Long categoeryId);
 
 }

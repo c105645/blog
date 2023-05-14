@@ -142,7 +142,7 @@ const PostCreator = () => {
         const response = await axiosPrivate.post(POSTLISTURL, post);
 
         setPostObj(response.data);
-        navigate("/read/" + postObj.id);
+        navigate("/read/" + response.data.id);
       } catch (err) {
         if (!err?.response) {
           setErrMsg("No Server Response");
@@ -252,7 +252,7 @@ const PostCreator = () => {
           >
             <option value="">Select Category...</option>
             {topics?.map(({ name }) => (
-              <option value={name}>{name}</option>
+              <option key={name} value={name}>{name}</option>
             ))}
           </Form.Select>
         </div>

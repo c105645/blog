@@ -267,4 +267,10 @@ public class UserProfileServiceImpl implements UserProfileService {
 
 		return searchresults.build();
 	}
+
+	@Override
+	public List<UserProfileDto> SearchAuthorsByCategories(Long categoeryid) {
+		return repository.findUserWithCategoery(categoeryid).stream()
+				.map(user -> usermapper.toDto(user)).collect(Collectors.toList());
+	}
 }

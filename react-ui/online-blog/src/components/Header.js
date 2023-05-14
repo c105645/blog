@@ -27,6 +27,7 @@ const Header = () => {
   const handleLogOut = () => {
     console.log("handleLogOut");
     setAuth(null);
+    localStorage.setItem("user-info", null);
     navigate("/login");
   };
 

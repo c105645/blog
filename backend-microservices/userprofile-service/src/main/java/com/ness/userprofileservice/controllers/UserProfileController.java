@@ -372,4 +372,20 @@ public class UserProfileController {
 		} else
 			return null;
 	}
+	
+	@ToLog
+	@GetMapping("/searchbycategoery")
+	@ResponseStatus(HttpStatus.CREATED)
+	@Operation(summary = "fetch users with  categoery")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "categories fetched", content = {
+			@Content(mediaType = "application/json", schema = @Schema(implementation = UserProfileDto.class)) }),
+			@ApiResponse(responseCode = "404", description = "categories dont exists", content = {
+					@Content(schema = @Schema(hidden = true)) }),
+			@ApiResponse(responseCode = "401", description = "Un-Authorized user", content = {
+					@Content(schema = @Schema(hidden = true)) }),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = {
+					@Content(schema = @Schema(hidden = true)) }) })
+	public List<UserProfileDto> searchbycategoery(@RequestParam(name = "categoeryid", required = true) Long categoeryid) {
+		return service.SearchAuthorsByCategories(categoeryid);
+	}
 }

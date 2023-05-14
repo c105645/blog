@@ -61,4 +61,6 @@ public interface UserProfileService {
 
 	SearchByCriteriaResults getMatchingCategories(String searchString, Pageable pageable);
 
+	List<UserProfileDto> SearchAuthorsByCategories(Long categoeryid);
+
 }

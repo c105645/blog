@@ -5,7 +5,7 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import "./AuthorRightPanel.css";
 
 const TopicRightPanel = ({ topic, followEvt }) => {
-    const FOLLOWINGLISTURL = "/userprofile/authors/following"
+    const FOLLOWINGCATEGOERYLISTURL = "/userprofile/searchbycategoery"
 
 
     const axiosPrivate = useAxiosPrivate();
@@ -18,10 +18,10 @@ const TopicRightPanel = ({ topic, followEvt }) => {
     const fetchAuthors = async () => {
       try {
         const authorrs = auth.user.following.map((user) => (user.username));
-        const response = await axiosPrivate.post(
-          FOLLOWINGLISTURL + "?page=0&size=20", authorrs
+        const response = await axiosPrivate.get(
+          FOLLOWINGCATEGOERYLISTURL + "?categoeryid=" + topic.id
         );
-        setAuthors(response.data.filter(author=> !auth.user.following[author] && auth.user.username !== author.username));
+        setAuthors(response.data.filter(author=> auth.user.username !== author.username));
       } catch (err) {
         if (!err?.response) {
           setErrMsg("No Server Response");

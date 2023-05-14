@@ -42,7 +42,7 @@ const PostList = ({searchBy, searchString, title, authors}) => {
   }, [searchBy, searchString]);
 
   return errMsg.length > 0 ? (
-    <Alert color="danger">{errMsg}</Alert>
+    <Alert style={{fontSize:"20px"}} color="danger">{errMsg}</Alert>
   ) : (
     <div className="tileList">
       {postArr.length ? postArr?.map((post) => (

@@ -5,12 +5,11 @@ import RecommandedTopics from "./RecommandedTopics";
 import RecommandedAuthors from "./RecommendedAuthors";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
-
 import "./Home.css";
 
 const Home = () => {
   const AUTHORS_URL = "/userprofile";
-  const FOLLOWINGLISTURL = "/userprofile/authors/following"
+  const FOLLOWINGLISTURL = "/userprofile/authors/following";
 
   const axiosPrivate = useAxiosPrivate();
   const { auth, setAuth } = useAuth();
@@ -37,32 +36,37 @@ const Home = () => {
     }),
   ];
 
-
   useEffect(() => {
     const fetchAuthors = async () => {
       try {
-        const authorrs = auth.user.following.map((user) => (user.username));
-        const response = await axiosPrivate.post(
-          FOLLOWINGLISTURL + "?page=0&size=20", authorrs
+        const authorrs = auth.user.following.map((user) => user.username);
+
+        const response = await (authorrs.length
+          ? axiosPrivate.post(FOLLOWINGLISTURL, authorrs)
+          : axiosPrivate.get(AUTHORS_URL));
+        setAuthors(
+          response.data.filter(
+            (author) =>
+              !auth.user.following[author] &&
+              auth.user.username !== author.username
+          )
         );
-        setAuthors(response.data.filter(author=> !auth.user.following[author] && auth.user.username !== author.username));
       } catch (err) {
         if (!err?.response) {
           setErrMsg("No Server Response");
         } else if (err.response?.status === 400) {
           setErrMsg("Missing Username or Password");
         } else if (err.response?.status === 401) {
-          setErrMsg("Unauthorized. Login again by clicking on sign-in on top right");
+          setErrMsg(
+            "Unauthorized. Login again by clicking on sign-in on top right"
+          );
           setAuth(null);
         } else {
           setErrMsg("Posts could not be fetched");
         }
-
       }
-
     };
     fetchAuthors();
-
   }, []);
 
   const handleTabClick = (e) => {
@@ -90,10 +94,16 @@ const Home = () => {
               {currentTab === `${tab.id}` && (
                 <div>
                   <PostList
-                    searchBy={tab.tabTitle == "Following" ?  "following" : tab.tabTitle == "For You"? "foryou" :  "categoery" || "foryou"}
+                    searchBy={
+                      tab.tabTitle == "Following"
+                        ? "following"
+                        : tab.tabTitle == "For You"
+                        ? "foryou"
+                        : "categoery" || "foryou"
+                    }
                     searchString={tab.tabTitle}
                     title={tab.title}
-                    authors={authors?.map(author => author.username)}
+                    authors={authors?.map((author) => author.username)}
                   />
                 </div>
               )}
@@ -114,7 +124,7 @@ const Home = () => {
           Recommended Authors
         </h3>
 
-        <RecommandedAuthors authors={authors}/>
+        <RecommandedAuthors authors={authors} />
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ import "./Register.css";
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,25}$/;
 const FIRSTNAME_REGEX = /^[A-z0-9-_]{3,25}$/;
 const LASTNAME_REGEX = /^[A-z0-9-_]{1,25}$/;
-const BIO_REGEX = /^[A-Za-z\d\s]*$/;
+const BIO_REGEX = /^.+$[\n\r]*/gm;
 const PASSWORD_REGEX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const EMAIL_REGEX =
@@ -165,7 +165,7 @@ const Register = () => {
         <section>
           <h1>Registration Successful!</h1>
           <p>
-            <a href="#">Sign In</a>
+          <Link to="/">Sign In</Link>
           </p>
         </section>
       ) : (
