@@ -22,7 +22,7 @@ const PostComment = (props) => {
 
     useEffect(() => {
         setComments(props.postObj.comments);
-    }, props.postObj.comments)
+    },[props.postObj.comments])
 
     const buttonClickHandler = () => {
         console.log("Comment Created");
