@@ -13,12 +13,19 @@ spring:
   lifecycle:
     timeout-per-shutdown-phase: 15s 
   config:
-    import: "optional:configserver:"   
+    import: "optional:configserver:" 
+  session: 
+    store-type: redis 
+    timeout: 10m 
+    redis: 
+      namespace: blog:edge    
   cloud:
     config:
+      name: edge-service
+      label: master
       uri: ${SPRING_CLOUD_CONFIG_URI:http://localhost:8888}
-      request-connect-timeout: 8000 # 5s
-      request-read-timeout: 20000 # 5s
+      request-connect-timeout: 5000 # 5s
+      request-read-timeout: 5000 # 5s
       fail-fast: false # In production, set to true
       retry:
         max-attempts: 6
@@ -26,25 +33,77 @@ spring:
         max-interval: 3000 # 2s
         multiplier: 1.1   
     gateway:
-       default-filters:
+        default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
-       routes:
+        - SaveSession
+        - name: Retry
+          args:  
+            retries: 3
+            methods: GET
+            series: SERVER_ERROR
+            exceptions: java.io.IOException, java.util.concurrent.TimeoutException
+            backoff:
+              firstBackoff: 50ms 
+              maxBackOff: 500ms 
+              factor: 2 
+              basedOnPreviousValue: false
+        - name: RequestRateLimiter 
+          args: 
+            redis-rate-limiter: 
+            replenishRate: 10
+            burstCapacity: 20
+            requestedTokens: 1              
+        httpClient: 
+          connect-timeout: 2000
+          response-timeout: 5s
+          pool:
+            type: elastic
+            max-idle-time: 15s
+            max-life-time: 60s       
+        routes:
         - id: userprofile-route
           uri: ${USERPROFILE_SERVICE_URL:http://localhost:9010}/api/v1/userprofile
           predicates:
             - Path=/api/v1/userprofile/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: userprofileCircuitBreaker
         - id: post-route
           uri: ${POST_SERVICE_URL:http://localhost:9020}/api/v1/post
           predicates:
-            - Path=/api/v1/post/**     
-           
+            - Path=/api/v1/post/**  
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: postCircuitBreaker
+                fallbackUri: forward:/post-fallback
+  data:
+    redis: 
+      connect-timeout: 2s
+      host: localhost
+      port: 6379
+      timeout: 1s             
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowSize: 20
+        permittedNumberOfCallsInHalfOpenState: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 15000
+  timelimiter:
+    configs:
+      default:
+        timeoutDuration: 5s 
+logging:
+ level:
+   io.github.resilience4j: DEBUG
+                  
 management:
   endpoints:
     web:
       exposure:
         include: refresh
-        
-        
 rsa:
   public-key: classpath:certs/public.pem
-

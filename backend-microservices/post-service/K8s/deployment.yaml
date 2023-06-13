@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: post-service
+  labels:
+    app: post-service
+spec: 
+  replicas: 2
+  selector:
+    matchLabels: 
+      app: post-service 
+  template:
+    metadata: 
+      labels:
+        app: post-service 
+    spec: 
+      containers:
+      - name: post-service
+        image: ranjithdoc/post-service
+        imagePullPolicy: IfNotPresent
+        lifecycle: 
+            preStop:
+              exec: 
+                command: [ "sh", "-c", "sleep 5" ]
+        ports: 
+          - containerPort: 9020
+        env:
+          - name: BPL_JVM_THREAD_COUNT
+            value: "50" 
+          - name: SPRING_DATASOURCE_URL
+            value: jdbc:postgresql://blog-postgres:5432/blogdb
+          - name: SPRING_DATASOURCE_USERNAME
+            value: user
+          - name: SPRING_DATASOURCE_PASSWORD
+            value: password        
+          - name: SPRING_CLOUD_CONFIG_URI
+            value: http://config-service
+          - name: USERPROFILE_SERVICE_URL
+            value: http://userprofile-service  

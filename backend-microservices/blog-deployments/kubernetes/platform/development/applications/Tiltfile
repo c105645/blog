@@ -1,0 +1,6 @@
+include('../../../../../userprofile-service/Tiltfile')
+include('../../../../../post-service/Tiltfile')
+include('../../../../../edge-service/Tiltfile')
+include('../../../../../config-service/Tiltfile')
+
+update_settings(max_parallel_updates=1)

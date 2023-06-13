@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edge-service
+  labels:
+    app: edge-service
+spec: 
+  replicas: 1
+  selector:
+    matchLabels: 
+      app: edge-service 
+  template:
+    metadata: 
+      labels:
+        app: edge-service 
+    spec: 
+      containers:
+      - name: edge-service
+        image: ranjithdoc/edge-service
+        imagePullPolicy: IfNotPresent
+        lifecycle: 
+            preStop:
+              exec: 
+                command: [ "sh", "-c", "sleep 5" ]
+        ports: 
+          - containerPort: 9000
+        env:
+          - name: BPL_JVM_THREAD_COUNT
+            value: "50" 
+          - name: USERPROFILE_SERVICE_URL
+            value: http://userprofile-service
+          - name: POST_SERVICE_URL
+            value: http://post-service
+          - name: SPRING_CLOUD_CONFIG_URI
+            value: http://config-service
+
+
