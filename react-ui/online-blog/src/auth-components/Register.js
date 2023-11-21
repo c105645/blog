@@ -8,6 +8,7 @@ import axios from "../api/axios";
 import { Link } from "react-router-dom";
 import "./Register.css";
 
+
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,25}$/;
 const FIRSTNAME_REGEX = /^[A-z0-9-_]{3,25}$/;
 const LASTNAME_REGEX = /^[A-z0-9-_]{1,25}$/;
