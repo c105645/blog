@@ -5,11 +5,17 @@ import IconButton from '@mui/material/IconButton';
 import ClockIcon from '@mui/icons-material/Clock';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 
-const TimePickerWrapper = (props) => {
-  const { value: initialValue, onChange, format = 'hh:mm:ss', ...otherProps } = props;
-  const [time, setTime] = useState(initialValue || ''); // Store time with AM/PM
+interface TimePickerWrapperProps {
+  value?: string;
+  onChange: (time: string) => void;
+  format?: string;
+}
 
-  const handleChange = (newTime) => {
+const TimePickerWrapper: React.FC<TimePickerWrapperProps> = (props) => {
+  const { value = '', onChange, format = 'hh:mm:ss', ...otherProps } = props;
+  const [time, setTime] = useState(value); // Store time with AM/PM
+
+  const handleChange = (newTime: Date | null) => {
     if (newTime !== null) {
       const formattedTime = newTime.toLocaleTimeString([], {
         hour: format.includes('h') ? '2-digit' : undefined,
@@ -18,11 +24,11 @@ const TimePickerWrapper = (props) => {
       });
       const convertedTime = convertTime(formattedTime); // Convert to 24-hour format
       setTime(formattedTime);
-      onChange(convertedTime); // Emit only 24-hour format
+      onChange(convertedTime);
     }
   };
 
-  const convertTime = (originalTime) => {
+  const convertTime = (originalTime: string): string => {
     const parts = originalTime.split(':');
     const hours = parseInt(parts[0], 10);
     const minutes = parts[1];
@@ -45,6 +51,7 @@ const TimePickerWrapper = (props) => {
     setOpen(false);
   };
 
+  const [open, setOpen] = useState(false);
   const formatParts = format.split(':');
 
   return (
