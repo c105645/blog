@@ -31,6 +31,12 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
+tasks.named('bootJar') {
+	layered {
+		enabled = true
+	}
+}
+
 bootBuildImage {
 	imageName = "${project.name}"
 	environment = ["BP_JVM_VERSION": "17.*"]

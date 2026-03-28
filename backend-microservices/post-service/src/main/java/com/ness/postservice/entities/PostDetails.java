@@ -6,11 +6,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -28,7 +28,7 @@ public class PostDetails extends Base {
     @JsonBackReference
 	private Post post;
 
-	@Lob
+	@Column(columnDefinition = "text")
 	private String content;
 	
 	public String getContent() {

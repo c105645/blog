@@ -50,9 +50,9 @@ spring:
         - name: RequestRateLimiter 
           args: 
             redis-rate-limiter: 
-            replenishRate: 10
-            burstCapacity: 20
-            requestedTokens: 1              
+              replenishRate: 10
+              burstCapacity: 20
+              requestedTokens: 1              
         httpClient: 
           connect-timeout: 2000
           response-timeout: 5s

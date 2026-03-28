@@ -2,11 +2,19 @@ version: "3.8"
 services:
 
   # Applications
+  config-service:
+    build: ../../config-service
+    container_name: "config-service"
+    ports:
+      - 8888:8888
+    environment:
+      - BPL_JVM_THREAD_COUNT=50
+
   userprofile-service:
+    build: ../../userprofile-service
     depends_on:
-      - config-service  
+      - config-service
       - blog-postgres
-    image: "ranjithdoc/userprofile-service"
     container_name: "userprofile-service"
     ports:
       - 9010:9010
@@ -17,10 +25,10 @@ services:
       - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
 
   post-service:
+    build: ../../post-service
     depends_on:
-      - config-service  
+      - config-service
       - blog-postgres
-    image: "ranjithdoc/post-service"
     container_name: "post-service"
     ports:
       - 9020:9020
@@ -29,14 +37,14 @@ services:
       - SPRING_DATASOURCE_USERNAME=user
       - SPRING_DATASOURCE_PASSWORD=password
       - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
-      
+
   edge-service:
+    build: ../../edge-service
     depends_on:
-      - config-service   
+      - config-service
       - blog-postgres
       - userprofile-service
       - post-service
-    image: "ranjithdoc/edge-service"
     container_name: "edge-service"
     ports:
       - 9000:9000
@@ -44,32 +52,22 @@ services:
       - USERPROFILE_SERVICE_URL=http://userprofile-service:9010
       - POST_SERVICE_URL=http://post-service:9020
       - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
-      
-  config-service:
-    image: "ranjithdoc/config-service"
-    container_name: "config-service"
-    ports:
-      - 8888:8888
-    environment:
-      # Buildpacks environment variable to configure the number of threads in memory calculation
-      - BPL_JVM_THREAD_COUNT=50  
 
-  blog-redis: 
+  # Backing Services
+  blog-redis:
     image: "redis:7.0"
-    container_name: "blog-redis" 
-    ports: 
+    container_name: "blog-redis"
+    ports:
       - 6379:6379
 
-  blog-rabbitmq: 
+  blog-rabbitmq:
     image: rabbitmq:3.10-management
-    container_name: blog-rabbitmq 
-    ports: 
+    container_name: blog-rabbitmq
+    ports:
       - 5672:5672
       - 15672:15672
-
     volumes:
-      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf     
-  # Backing Services
+      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
 
   blog-postgres:
     image: "postgres:latest"
@@ -79,9 +77,10 @@ services:
     environment:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=blogdb      
+      - POSTGRES_DB=blogdb
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql
+
 volumes:
   pgdata:
     driver: local

@@ -116,8 +116,37 @@ const Register = () => {
     const v5 = BIO_REGEX.test(biography);
     const v6 = EMAIL_REGEX.test(email);
     const v7 = URL_REGEX.test(imageUrl);
-    if (!v1 || !v2 || !v3 || !v4 || !v5 || !v6 || !v7) {
-      setErrMsg("Invalid Entry");
+    
+    if (!v1) {
+      setErrMsg("Username: 4 to 24 characters, must begin with a letter. Letters, numbers, underscores, hyphens allowed.");
+      return;
+    }
+    if (!v6) {
+      setErrMsg("Email: Must be a valid email address.");
+      return;
+    }
+    if (!v2) {
+      setErrMsg("Password: 8 to 24 characters. Must include uppercase and lowercase letters, a number and a special character (!@#$%).");
+      return;
+    }
+    if (!matchPassword || password !== matchPassword) {
+      setErrMsg("Confirm Password: Must match the first password.");
+      return;
+    }
+    if (!v3) {
+      setErrMsg("First Name: 3 to 25 characters. Letters, numbers, underscores, hyphens allowed.");
+      return;
+    }
+    if (!v4) {
+      setErrMsg("Last Name: 1 to 25 characters. Letters, numbers, underscores, hyphens allowed.");
+      return;
+    }
+    if (!v7) {
+      setErrMsg("Image URL: Must be a valid URL.");
+      return;
+    }
+    if (!v5) {
+      setErrMsg("Biography: Must be at least 1 character.");
       return;
     }
     try {

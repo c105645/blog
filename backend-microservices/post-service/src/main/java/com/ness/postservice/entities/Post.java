@@ -15,7 +15,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinTable;
-import jakarta.persistence.Lob;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
@@ -29,10 +28,10 @@ public class Post extends Base {
 
 	private static final long serialVersionUID = 1L;
 
-	@Lob
+	@Column(columnDefinition = "text")
 	private String title;
 
-	@Lob
+	@Column(columnDefinition = "text")
 	private String short_description;
 
 	@OneToMany(mappedBy = "post", fetch = FetchType.LAZY, orphanRemoval = true, cascade = {CascadeType.MERGE })

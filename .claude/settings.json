@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker stop:*)",
+      "Bash(docker rm:*)",
+      "Bash(docker run:*)",
+      "Bash(docker network:*)",
+      "Bash(curl -s -X POST \"http://localhost:9020/api/v1/post/search?page=0&size=5\" -H \"Content-Type: application/json\" -d '{\"\"\"\"searchBy\"\"\"\":\"\"\"\"author\"\"\"\",\"\"\"\"searchString\"\"\"\":\"\"\"\"sarah_writes\"\"\"\",\"\"\"\"following\"\"\"\":[],\"\"\"\"categories\"\"\"\":[]}')",
+      "Bash(python3 -m json.tool)"
+    ]
+  }
+}

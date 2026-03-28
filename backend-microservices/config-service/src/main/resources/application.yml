@@ -17,10 +17,10 @@ spring:
     config:
       server:
         git:
-          uri: https://gitlab.stackroute.in/capstone-blogging-project/config-repo.git
-          username: ranjith.maddipati@ness.com
-          password: SCqZnMzcGxwnDGxyz24M
-          default-label: master
+          uri: https://github.com/c105645/config-repo.git
+          username: c105645
+          password: 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
+          default-label: main
           timeout: 5
           clone-on-start: true
           force-pull: true
